@@ -37,7 +37,7 @@ import {
 } from "recharts";
 
 // Configuration
-const API_BASE = "/api";
+const API_BASE = process.env.NEXT_PUBLIC_API_BASE || "/api";
 const POLLING_INTERVAL_MS = 5000;
 
 export default function Dashboard() {
@@ -53,6 +53,7 @@ export default function Dashboard() {
   
   // Analytics specific states
   const [gexProfile, setGexProfile] = useState<any>(null);
+  const [dealerExposureData, setDealerExposureData] = useState<any>(null);
   const [volSmile, setVolSmile] = useState<any>(null);
   const [backtestData, setBacktestData] = useState<any>(null);
   const [forecastData, setForecastData] = useState<any>(null);
@@ -64,8 +65,22 @@ export default function Dashboard() {
   const [lastUpdated, setLastUpdated] = useState<Date>(new Date());
   const [mounted, setMounted] = useState<boolean>(false);
   
+  const getRegimeColorClass = (color?: string) => {
+    if (color === "emerald") return "text-emerald-600";
+    if (color === "rose") return "text-rose-650";
+    return "text-amber-600";
+  };
+
+  const safeNumber = (num: number | undefined | null, decimals = 2) => {
+    if (num === undefined || num === null || Number.isNaN(num)) return "0.00";
+    return Number(num).toLocaleString("en-IN", {
+      minimumFractionDigits: decimals,
+      maximumFractionDigits: decimals,
+    });
+  };
+
   // Fetch Helper
-  const fetchData = async () => {
+  const fetchData = async (tabKey = activeTab) => {
     try {
       setError(null);
       
@@ -89,20 +104,21 @@ export default function Dashboard() {
       }
 
       // 3. Fetch specific tab data to minimize load
-      if (activeTab === "option-chain") {
+      if (tabKey === "option-chain") {
         const chainRes = await fetch(`${API_BASE}/market/option-chain?symbol=${symbol}`);
         if (chainRes.ok) setChainData(await chainRes.json());
-      } else if (activeTab === "dealer-positioning") {
+      } else if (tabKey === "dealer-positioning") {
         const gexRes = await fetch(`${API_BASE}/analytics/gex-profile?symbol=${symbol}`);
         if (gexRes.ok) setGexProfile(await gexRes.json());
-      } else if (activeTab === "volatility") {
+
+        const dealerRes = await fetch(`${API_BASE}/analytics/dealer-positioning?symbol=${symbol}`);
+        if (dealerRes.ok) setDealerExposureData(await dealerRes.json());
+      } else if (tabKey === "volatility") {
         const smileRes = await fetch(`${API_BASE}/analytics/volatility-smile?symbol=${symbol}`);
         if (smileRes.ok) setVolSmile(await smileRes.json());
-      } else if (activeTab === "backtest") {
-        if (!backtestData) {
-          const btRes = await fetch(`${API_BASE}/signals/backtest?symbol=${symbol}`);
-          if (btRes.ok) setBacktestData(await btRes.json());
-        }
+      } else if (tabKey === "backtest") {
+        const btRes = await fetch(`${API_BASE}/signals/backtest?symbol=${symbol}`);
+        if (btRes.ok) setBacktestData(await btRes.json());
       }
       
       // 4. Fetch AI forecast
@@ -125,13 +141,22 @@ export default function Dashboard() {
   // Initial and Polling load
   useEffect(() => {
     setLoading(true);
-    fetchData();
+    setChainData(null);
+    setGexProfile(null);
+    setDealerExposureData(null);
+    setVolSmile(null);
+    setBacktestData(null);
+    fetchData(activeTab);
     
-    const timer = setInterval(() => {
-      fetchData();
-    }, POLLING_INTERVAL_MS);
+    const timer = activeTab === "backtest"
+      ? null
+      : setInterval(() => {
+          fetchData(activeTab);
+        }, POLLING_INTERVAL_MS);
     
-    return () => clearInterval(timer);
+    return () => {
+      if (timer) clearInterval(timer);
+    };
   }, [symbol, activeTab]);
 
   // Handle Model Retraining
@@ -167,6 +192,9 @@ export default function Dashboard() {
     }
     return val.toFixed(0);
   };
+
+  const spotChange = Number(spotData?.change_pct ?? 0);
+  const summaryRegimeColor = getRegimeColorClass(summaryData?.volatility_regime?.color);
 
   return (
     <div className="flex-1 flex flex-col bg-[#ebedef] text-slate-800 min-h-screen">
@@ -327,7 +355,7 @@ export default function Dashboard() {
                   </div>
                   <div className="flex justify-between text-xs">
                     <span className="text-slate-600 font-medium">Mkt Vol State:</span>
-                    <span className={`font-bold text-${summaryData.volatility_regime.color === 'emerald' ? 'emerald-600' : (summaryData.volatility_regime.color === 'rose' ? 'rose-650' : 'amber-600')}`}>
+                    <span className={`font-bold ${summaryRegimeColor}`}>
                       {summaryData.volatility_regime.regime}
                     </span>
                   </div>
@@ -352,10 +380,10 @@ export default function Dashboard() {
                     </h2>
                   </div>
                   <span className={`flex items-center gap-1 text-xs font-bold px-2 py-1 rounded-md mt-1 ${
-                    spotData.change_pct >= 0 ? "bg-emerald-50 text-emerald-700 border border-emerald-250" : "bg-rose-50 text-rose-700 border border-rose-250"
+                    spotChange >= 0 ? "bg-emerald-50 text-emerald-700 border border-emerald-250" : "bg-rose-50 text-rose-700 border border-rose-250"
                   }`}>
-                    {spotData.change_pct >= 0 ? <TrendingUp className="h-3 w-3" /> : <TrendingDown className="h-3 w-3" />}
-                    {spotData.change_pct >= 0 ? "+" : ""}{spotData.change_pct}%
+                    {spotChange >= 0 ? <TrendingUp className="h-3 w-3" /> : <TrendingDown className="h-3 w-3" />}
+                    {spotChange >= 0 ? "+" : ""}{safeNumber(spotChange, 2)}%
                   </span>
                 </div>
                 
@@ -367,8 +395,8 @@ export default function Dashboard() {
                         <AreaChart data={spotData.trend}>
                           <defs>
                             <linearGradient id="colorSpot" x1="0" y1="0" x2="0" y2="1">
-                              <stop offset="5%" stopColor={spotData.change_pct >= 0 ? "#10b981" : "#f43f5e"} stopOpacity={0.2}/>
-                              <stop offset="95%" stopColor={spotData.change_pct >= 0 ? "#10b981" : "#f43f5e"} stopOpacity={0}/>
+                              <stop offset="5%" stopColor={spotChange >= 0 ? "#10b981" : "#f43f5e"} stopOpacity={0.2}/>
+                              <stop offset="95%" stopColor={spotChange >= 0 ? "#10b981" : "#f43f5e"} stopOpacity={0}/>
                             </linearGradient>
                           </defs>
                           <XAxis dataKey="timestamp" hide />
@@ -376,7 +404,7 @@ export default function Dashboard() {
                           <Area 
                             type="monotone" 
                             dataKey="price" 
-                            stroke={spotData.change_pct >= 0 ? "#10b981" : "#f43f5e"} 
+                            stroke={spotChange >= 0 ? "#10b981" : "#f43f5e"} 
                             strokeWidth={1.5}
                             fillOpacity={1} 
                             fill="url(#colorSpot)" 
@@ -396,7 +424,7 @@ export default function Dashboard() {
                     {formatNumber(vixData.value)}
                   </h2>
                   {summaryData && (
-                    <span className={`text-xs font-bold text-${summaryData.volatility_regime.color === 'emerald' ? 'emerald-600' : (summaryData.volatility_regime.color === 'rose' ? 'rose-650' : 'amber-600')}`}>
+                    <span className={`text-xs font-bold ${summaryRegimeColor}`}>
                       {summaryData.volatility_regime.regime}
                     </span>
                   )}
@@ -568,7 +596,7 @@ export default function Dashboard() {
                       <div className="w-full bg-[#ebedef]/70 rounded-xl p-4 border border-[#dcdfe3]">
                         <div className="flex justify-between items-baseline">
                           <span className="text-[10px] text-slate-500 font-bold uppercase tracking-wider">Fear Index (VIX)</span>
-                          <span className={`text-sm font-extrabold text-${summaryData.volatility_regime.color === 'emerald' ? 'emerald-600' : (summaryData.volatility_regime.color === 'rose' ? 'rose-650' : 'amber-600')}`}>
+                          <span className={`text-sm font-extrabold ${summaryRegimeColor}`}>
                             {vixData.value.toFixed(2)}
                           </span>
                         </div>
@@ -726,7 +754,7 @@ export default function Dashboard() {
                               
                               {/* Put columns */}
                               <td className={`py-2 px-1 text-left text-indigo-650 ${isPutITM ? "bg-indigo-50/20" : ""}`}>
-                                {pepe_gamma(pe)}
+                                {pe?.gamma.toFixed(5)}
                               </td>
                               <td className={`py-2 px-1 text-left text-cyan-600 font-semibold ${isPutITM ? "bg-indigo-50/20" : ""}`}>
                                 {pe?.delta.toFixed(2)}
@@ -875,7 +903,7 @@ export default function Dashboard() {
                   <div className="h-80 mt-6">
                     {mounted && (
                       <ResponsiveContainer width="100%" height="100%">
-                        <BarChart data={chainData?.options ? compileGexData(chainData.options, chainData.spot_price) : []}>
+                        <BarChart data={dealerExposureData?.strikes || (chainData?.options ? compileGexData(chainData.options, chainData.spot_price) : [])}>
                           <CartesianGrid strokeDasharray="3 3" stroke="#dcdfe3" />
                           <XAxis dataKey="strike" stroke="#64748b" fontSize={10} />
                           <YAxis stroke="#64748b" fontSize={10} tickFormatter={(tick) => formatGex(tick)} />
@@ -1039,7 +1067,7 @@ export default function Dashboard() {
                     <div className="bg-[#ebedef]/70 p-4 rounded-xl border border-[#dcdfe3] shadow-inner">
                       <span className="text-[10px] text-slate-605 font-bold uppercase tracking-wider block">Win Rate</span>
                       <div className="text-2xl font-black text-slate-900 font-mono mt-1">
-                        {backtestData.results.win_rate}%
+                        {backtestData.results.metrics.win_rate}%
                       </div>
                     </div>
                     <div className="bg-[#ebedef]/70 p-4 rounded-xl border border-[#dcdfe3] shadow-inner">

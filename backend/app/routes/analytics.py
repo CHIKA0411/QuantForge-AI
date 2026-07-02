@@ -20,7 +20,25 @@ def get_current_options_data(symbol: str, db: Session) -> Tuple[float, float, da
     latest_record = db.query(OptionChain).filter(OptionChain.symbol == symbol).order_by(OptionChain.timestamp.desc()).first()
     
     if not latest_record:
-        # Fallback to direct client
+        # Prefer the live NSE snapshot when available.
+        try:
+            data = nse_client.get_market_data(symbol)
+            if isinstance(data, dict) and data.get("options"):
+                spot_price = data["spot_price"]
+                vix_val = data["vix"]
+                expiry_date = data["expiry_date"]
+                options = data["options"]
+                timestamp = data["timestamp"]
+
+                expiry_dt = datetime.datetime.combine(expiry_date, datetime.time(15, 30))
+                dt_diff = expiry_dt - timestamp
+                time_to_expiry_seconds = max(1.0, dt_diff.total_seconds())
+                T = time_to_expiry_seconds / (365.0 * 86400.0)
+
+                return spot_price, vix_val, expiry_date, T, options
+        except Exception:
+            pass
+
         data = nse_client.get_market_data(symbol)
         spot_price = data["spot_price"]
         vix_val = data["vix"]
@@ -85,8 +103,8 @@ def get_analytics_summary(symbol: str = Query(default="NIFTY"), db: Session = De
     """Return a single summary package containing basic and advanced metrics."""
     spot_price, vix_val, expiry_date, T, options = get_current_options_data(symbol, db)
     
-    pcr = calculate_pcr(options)
-    max_pain = calculate_max_pain(options)
+    pcr = calculate_pcr(options, spot_price)
+    max_pain = calculate_max_pain(options, spot_price)
     sr = calculate_support_resistance(options, spot_price)
     
     lot_size = settings.LOT_SIZE_NIFTY if symbol == "NIFTY" else settings.LOT_SIZE_BANKNIFTY
@@ -109,6 +127,24 @@ def get_analytics_summary(symbol: str = Query(default="NIFTY"), db: Session = De
         "gamma_flip_level": flip_level,
         "iv_skew": skew,
         "volatility_regime": regime
+    }
+
+@router.get("/pcr")
+def get_pcr_data(
+    symbol: str = Query(default="NIFTY"),
+    num_strikes: int = Query(default=5, ge=1, le=20, description="Number of strikes above and below ATM"),
+    db: Session = Depends(get_db)
+):
+    """
+    Detailed Put-Call Ratio using N strikes above and below ATM.
+    Returns OI-based PCR, Volume-based PCR, ATM strike, totals, and per-strike breakdown.
+    """
+    spot_price, _, _, _, options = get_current_options_data(symbol, db)
+    pcr = calculate_pcr(options, spot_price, num_strikes)
+    return {
+        "symbol": symbol,
+        "spot_price": spot_price,
+        **pcr
     }
 
 @router.get("/dealer-positioning")

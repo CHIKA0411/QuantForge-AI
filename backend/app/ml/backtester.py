@@ -9,7 +9,7 @@ def run_ml_backtest(df: pd.DataFrame, symbol: str) -> Dict[str, Any]:
     Runs predictions historically, generates buy/sell/neutral positions,
     and calculates standard quantitative performance metrics.
     """
-    if df.empty or len(df) < 50:
+    if df.empty or len(df) < 15:
         return {
             "metrics": {
                 "cagr": 0.0, "sharpe": 0.0, "sortino": 0.0, "max_drawdown": 0.0,

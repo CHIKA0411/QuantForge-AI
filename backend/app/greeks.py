@@ -70,13 +70,15 @@ def calculate_greeks_vectorized(
     # Handle expiration day (T = 0)
     invalid_mask = ~valid_mask
     if np.any(invalid_mask):
-        is_call = (option_type == "CE")
+        K_invalid = K[invalid_mask]
+        option_type_invalid = option_type[invalid_mask]
+        is_call = (option_type_invalid == "CE")
         
         # Delta at expiry is 1.0 (Call) or -1.0 (Put) if in-the-money
         delta[invalid_mask] = np.where(
             is_call,
-            np.where(S > K, 1.0, 0.0),
-            np.where(S < K, -1.0, 0.0)
+            np.where(S > K_invalid, 1.0, 0.0),
+            np.where(S < K_invalid, -1.0, 0.0)
         )
         gamma[invalid_mask] = 0.0
         vega[invalid_mask] = 0.0

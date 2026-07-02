@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends, Query, HTTPException
 from sqlalchemy.orm import Session
-from typing import List, Dict, Any
+from typing import List, Dict, Any, Optional
 import datetime
 from app.db import get_db, SpotPrice, OptionChain, VixData
 from app.nse_client import nse_client
@@ -8,21 +8,35 @@ from app.config import settings
 
 router = APIRouter(prefix="/market", tags=["market"])
 
+
+def _get_live_market_snapshot(symbol: str) -> Optional[Dict[str, Any]]:
+    try:
+        data = nse_client.get_market_data(symbol)
+        if isinstance(data, dict) and data.get("spot_price") is not None:
+            return data
+    except Exception:
+        return None
+    return None
+
+
 @router.get("/spot")
 def get_spot_price(symbol: str = Query(default="NIFTY", description="Symbol name (NIFTY/BANKNIFTY)"), db: Session = Depends(get_db)):
     """Get the latest spot price of the index and past 30 points trend."""
     # Find latest in DB
     latest = db.query(SpotPrice).filter(SpotPrice.symbol == symbol).order_by(SpotPrice.timestamp.desc()).first()
-    
+
     if not latest:
-        # Fallback to direct client
-        data = nse_client.get_market_data(symbol)
-        return {
-            "symbol": symbol,
-            "price": data["spot_price"],
-            "timestamp": data["timestamp"],
-            "trend": [{"timestamp": data["timestamp"], "price": data["spot_price"]}]
-        }
+        live_data = _get_live_market_snapshot(symbol)
+        if live_data:
+            return {
+                "symbol": symbol,
+                "price": live_data["spot_price"],
+                "timestamp": live_data["timestamp"],
+                "trend": [{"timestamp": live_data["timestamp"], "price": live_data["spot_price"]}],
+                "change_pct": 0.0,
+            }
+
+        raise HTTPException(status_code=502, detail=f"Unable to fetch live market data for {symbol}")
         
     # Get recent trend
     trend_records = db.query(SpotPrice).filter(SpotPrice.symbol == symbol).order_by(SpotPrice.timestamp.desc()).limit(30).all()
@@ -48,31 +62,24 @@ def get_spot_price(symbol: str = Query(default="NIFTY", description="Symbol name
 @router.get("/option-chain")
 def get_option_chain(symbol: str = Query(default="NIFTY"), db: Session = Depends(get_db)):
     """Get the latest option chain data with Greeks."""
-    # Find the latest timestamp in OptionChain for this symbol
-    latest_record = db.query(OptionChain).filter(OptionChain.symbol == symbol).order_by(OptionChain.timestamp.desc()).first()
-    
-    if not latest_record:
-        # Fallback to direct simulation/scrape
-        data = nse_client.get_market_data(symbol)
-        # Compute Greeks on the fly for the response if DB is empty
-        # Expiry datetime
-        expiry_dt = datetime.datetime.combine(data["expiry_date"], datetime.time(15, 30))
-        dt_diff = expiry_dt - data["timestamp"]
+    live_data = _get_live_market_snapshot(symbol)
+    if live_data and live_data.get("options"):
+        expiry_dt = datetime.datetime.combine(live_data["expiry_date"], datetime.time(15, 30))
+        dt_diff = expiry_dt - live_data["timestamp"]
         time_to_expiry_seconds = max(1.0, dt_diff.total_seconds())
         T = time_to_expiry_seconds / (365.0 * 86400.0)
-        
-        # Vectorized Greeks
+
         import numpy as np
         from app.greeks import calculate_greeks_vectorized
-        options = data["options"]
+        options = live_data["options"]
         strikes = np.array([opt["strike_price"] for opt in options])
         ivs = np.array([opt["implied_volatility"] for opt in options])
         types = np.array([opt["option_type"] for opt in options])
-        
+
         deltas, gammas, vegas, thetas = calculate_greeks_vectorized(
-            data["spot_price"], strikes, T, settings.RISK_FREE_RATE, ivs, types
+            live_data["spot_price"], strikes, T, settings.RISK_FREE_RATE, ivs, types
         )
-        
+
         response_options = []
         for i, opt in enumerate(options):
             opt_copy = opt.copy()
@@ -81,14 +88,20 @@ def get_option_chain(symbol: str = Query(default="NIFTY"), db: Session = Depends
             opt_copy["vega"] = float(vegas[i])
             opt_copy["theta"] = float(thetas[i])
             response_options.append(opt_copy)
-            
+
         return {
             "symbol": symbol,
-            "spot_price": data["spot_price"],
-            "timestamp": data["timestamp"],
-            "expiry_date": data["expiry_date"],
+            "spot_price": live_data["spot_price"],
+            "timestamp": live_data["timestamp"],
+            "expiry_date": live_data["expiry_date"],
             "options": response_options
         }
+
+    # Find the latest timestamp in OptionChain for this symbol
+    latest_record = db.query(OptionChain).filter(OptionChain.symbol == symbol).order_by(OptionChain.timestamp.desc()).first()
+    
+    if not latest_record:
+        raise HTTPException(status_code=502, detail=f"Unable to fetch live option chain data for {symbol}")
         
     latest_ts = latest_record.timestamp
     expiry_date = latest_record.expiry_date

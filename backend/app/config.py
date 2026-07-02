@@ -1,4 +1,5 @@
 # pyright: ignore [reportMissingImports]
+from pathlib import Path
 from pydantic_settings import BaseSettings
 from pydantic import Field
 
@@ -16,7 +17,8 @@ class Settings(BaseSettings):
     SQLITE_DATABASE_PATH: str = Field(default="sqlite:///quantforge.db", description="Fallback SQLite connection string")
     
     # Data collection mode
-    NSE_SIMULATE: bool = Field(default=True, description="Use simulated option chain data instead of direct NSE scraping")
+    # Attempt live NSE option-chain scraping by default; fall back to simulation only if scraping fails.
+    NSE_SIMULATE: bool = Field(default=False, description="Use simulated option chain data instead of direct NSE scraping")
     COLLECTION_INTERVAL_SECONDS: int = Field(default=60, description="Option chain scrape interval in seconds")
     
     # Derivatives specifications
@@ -27,7 +29,8 @@ class Settings(BaseSettings):
     RISK_FREE_RATE: float = Field(default=0.07, description="Risk-free interest rate (e.g. 0.07 for 7% p.a.)")
 
     class Config:
-        env_file = ".env"
+        env_file = Path(__file__).resolve().parent / ".env"
+        env_file_encoding = "utf-8"
         extra = "ignore"
 
 settings = Settings()
