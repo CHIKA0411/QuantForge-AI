@@ -24,6 +24,20 @@ class Settings(BaseSettings):
     # Derivatives specifications
     LOT_SIZE_NIFTY: int = Field(default=25, description="NIFTY lot size")
     LOT_SIZE_BANKNIFTY: int = Field(default=15, description="BANKNIFTY lot size")
+    LOT_SIZE_SENSEX: int = Field(default=10, description="SENSEX lot size")
+    LOT_SIZE_BANKEX: int = Field(default=15, description="BANKEX lot size")
+    
+    # Caching settings
+    REDIS_HOST: str = Field(default="localhost", description="Redis server host")
+    REDIS_PORT: int = Field(default=6379, description="Redis server port")
+    REDIS_PASSWORD: str = Field(default="", description="Redis password")
+    
+    # Alert thresholds
+    ALERT_PCR_UPPER: float = 1.2
+    ALERT_PCR_LOWER: float = 0.7
+    ALERT_VIX_SPIKE_PCT: float = 15.0
+    ALERT_UNUSUAL_OI_PCT: float = 200.0
+    ALERT_BULLISH_PROB: float = 80.0
     
     # Volatility models settings
     RISK_FREE_RATE: float = Field(default=0.07, description="Risk-free interest rate (e.g. 0.07 for 7% p.a.)")

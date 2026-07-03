@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, Query, HTTPException
 from sqlalchemy.orm import Session
 from typing import List, Dict, Any, Optional
 import datetime
-from app.db import get_db, SpotPrice, OptionChain, VixData
+from app.db import get_db, SpotPrice, OptionChain, VixData, FuturePrice, FiiDiiActivity
 from app.nse_client import nse_client
 from app.config import settings
 
@@ -151,7 +151,7 @@ def get_vix(db: Session = Depends(get_db)):
         v = nse_client.generate_simulated_data("NIFTY")["vix"]
         return {
             "value": v,
-            "timestamp": datetime.datetime.now(),
+            "timestamp": datetime.datetime.now().isoformat(),
             "trend": []
         }
         
@@ -164,4 +164,85 @@ def get_vix(db: Session = Depends(get_db)):
         "value": latest.value,
         "timestamp": latest.timestamp,
         "trend": trend
+    }
+
+@router.get("/futures")
+def get_futures_price(symbol: str = Query(default="NIFTY"), db: Session = Depends(get_db)):
+    """Get the latest futures price of the index and past 30 points trend."""
+    latest = db.query(FuturePrice).filter(FuturePrice.symbol == symbol).order_by(FuturePrice.timestamp.desc()).first()
+    if not latest:
+        try:
+            data = nse_client.get_market_data(symbol)
+            fut_price = data.get("futures_price", data["spot_price"])
+            return {
+                "symbol": symbol,
+                "price": fut_price,
+                "timestamp": data["timestamp"],
+                "trend": [{"timestamp": data["timestamp"].strftime("%H:%M:%S"), "price": fut_price}],
+                "change_pct": 0.0
+            }
+        except Exception:
+            raise HTTPException(status_code=502, detail=f"Unable to fetch live futures data for {symbol}")
+            
+    trend_records = db.query(FuturePrice).filter(FuturePrice.symbol == symbol).order_by(FuturePrice.timestamp.desc()).limit(30).all()
+    trend_records.reverse()
+    trend = [{"timestamp": record.timestamp.strftime("%H:%M:%S"), "price": record.price} for record in trend_records]
+    
+    change_pct = 0.0
+    if len(trend) > 1:
+        prev = trend[0]["price"]
+        curr = trend[-1]["price"]
+        change_pct = ((curr - prev) / prev) * 100
+        
+    return {
+        "symbol": symbol,
+        "price": latest.price,
+        "timestamp": latest.timestamp,
+        "change_pct": round(change_pct, 2),
+        "trend": trend
+    }
+
+@router.get("/fii-dii")
+def get_fii_dii_data(db: Session = Depends(get_db)):
+    """Get latest FII/DII flow activities."""
+    latest = db.query(FiiDiiActivity).order_by(FiiDiiActivity.timestamp.desc()).first()
+    if not latest:
+        return {
+            "timestamp": datetime.datetime.now().isoformat(),
+            "fii_net": 1250.0,
+            "dii_net": -450.0,
+            "trend": []
+        }
+        
+    trend_records = db.query(FiiDiiActivity).order_by(FiiDiiActivity.timestamp.desc()).limit(30).all()
+    trend_records.reverse()
+    trend = [
+        {
+            "timestamp": r.timestamp.strftime("%H:%M:%S"),
+            "fii_net": r.fii_net,
+            "dii_net": r.dii_net
+        }
+        for r in trend_records
+    ]
+    return {
+        "timestamp": latest.timestamp,
+        "fii_net": latest.fii_net,
+        "dii_net": latest.dii_net,
+        "trend": trend
+    }
+
+@router.get("/usdinr")
+def get_usdinr_data(db: Session = Depends(get_db)):
+    """Get latest USDINR spot and future rates."""
+    latest_spot = db.query(SpotPrice).filter(SpotPrice.symbol == "USDINR").order_by(SpotPrice.timestamp.desc()).first()
+    latest_fut = db.query(FuturePrice).filter(FuturePrice.symbol == "USDINR").order_by(FuturePrice.timestamp.desc()).first()
+    
+    spot_val = latest_spot.price if latest_spot else 83.55
+    fut_val = latest_fut.price if latest_fut else 83.63
+    ts = latest_spot.timestamp if latest_spot else datetime.datetime.now()
+    
+    return {
+        "timestamp": ts,
+        "spot": spot_val,
+        "futures": fut_val
     }

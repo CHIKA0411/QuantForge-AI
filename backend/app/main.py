@@ -8,7 +8,7 @@ from sqlalchemy import text
 from app.db import get_db, SessionLocal
 from app.config import settings
 from app.collector import start_collector, stop_collector
-from app.routes import market, analytics, signals
+from app.routes import market, analytics, signals, admin, research
 
 logger = logging.getLogger("quantforge.main")
 logging.basicConfig(level=logging.INFO)
@@ -49,6 +49,39 @@ app.add_middleware(
 app.include_router(market.router, prefix="/api")
 app.include_router(analytics.router, prefix="/api")
 app.include_router(signals.router, prefix="/api")
+app.include_router(admin.router, prefix="/api")
+app.include_router(research.router, prefix="/api")
+
+# Direct Top-Level API Mappings
+@app.get("/api/pcr")
+def get_top_pcr(symbol: str = "SENSEX", num_strikes: int = 5, db: Session = Depends(get_db)):
+    from app.routes.analytics import get_pcr_data
+    return get_pcr_data(symbol, num_strikes, db)
+
+@app.get("/api/maxpain")
+def get_top_maxpain(symbol: str = "SENSEX", db: Session = Depends(get_db)):
+    from app.routes.analytics import get_max_pain
+    return get_max_pain(symbol, db)
+
+@app.get("/api/prediction")
+def get_top_prediction(symbol: str = "SENSEX", db: Session = Depends(get_db)):
+    from app.routes.signals import get_market_forecast
+    return get_market_forecast(symbol, db)
+
+@app.get("/api/vix")
+def get_top_vix(db: Session = Depends(get_db)):
+    from app.routes.market import get_vix
+    return get_vix(db)
+
+@app.get("/api/oi")
+def get_top_oi(symbol: str = "SENSEX", db: Session = Depends(get_db)):
+    from app.routes.analytics import get_oi_analytics
+    return get_oi_analytics(symbol, db)
+
+@app.get("/api/alerts")
+def get_top_alerts(db: Session = Depends(get_db)):
+    from app.routes.admin import get_alerts
+    return get_alerts(db)
 
 @app.get("/api/health")
 def health_check(db: Session = Depends(get_db)):

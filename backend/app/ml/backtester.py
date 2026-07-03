@@ -3,11 +3,10 @@ import numpy as np
 from typing import Dict, Any, List
 from app.ml.models import predict_market_direction
 
-def run_ml_backtest(df: pd.DataFrame, symbol: str) -> Dict[str, Any]:
+def run_ml_backtest(df: pd.DataFrame, symbol: str, strategy: str = "AI_Probability") -> Dict[str, Any]:
     """
-    Backtest the ML-driven options intelligence strategy.
-    Runs predictions historically, generates buy/sell/neutral positions,
-    and calculates standard quantitative performance metrics.
+    Backtest quantitative options strategies.
+    Supported strategies: 'AI_Probability', 'PCR_Strategy', 'Max_Pain_Strategy'.
     """
     if df.empty or len(df) < 15:
         return {
@@ -18,20 +17,39 @@ def run_ml_backtest(df: pd.DataFrame, symbol: str) -> Dict[str, Any]:
             "equity_curve": []
         }
 
-    # 1. Generate historical signals
-    # For speed in backtesting, we run prediction on each row
+    # 1. Generate historical signals based on the selected strategy
     signals = []
-    for _, row in df.iterrows():
-        features_dict = row.to_dict()
-        pred = predict_market_direction(features_dict, symbol)
-        signals.append(pred["signal"])
-        
-    df["ml_signal"] = signals
+    
+    if strategy == "PCR_Strategy":
+        for _, row in df.iterrows():
+            pcr = row.get("pcr_oi", 1.0)
+            if pcr > 1.15:
+                signals.append("BUY")
+            elif pcr < 0.8:
+                signals.append("SELL")
+            else:
+                signals.append("NEUTRAL")
+    elif strategy == "Max_Pain_Strategy":
+        for _, row in df.iterrows():
+            dist = row.get("max_pain_dist", 0.0)
+            if dist < -0.002:
+                signals.append("BUY")
+            elif dist > 0.002:
+                signals.append("SELL")
+            else:
+                signals.append("NEUTRAL")
+    else:  # AI_Probability
+        for _, row in df.iterrows():
+            features_dict = row.to_dict()
+            pred = predict_market_direction(features_dict, symbol)
+            signals.append(pred["signal"])
+            
+    df["sig_label"] = signals
     
     # Map signals to positions (1 = Long, -1 = Short, 0 = Flat/Neutral)
     df["position"] = 0
-    df.loc[df["ml_signal"] == "BUY", "position"] = 1
-    df.loc[df["ml_signal"] == "SELL", "position"] = -1
+    df.loc[df["sig_label"] == "BUY", "position"] = 1
+    df.loc[df["sig_label"] == "SELL", "position"] = -1
     
     # 2. Compute returns
     # Spot price returns

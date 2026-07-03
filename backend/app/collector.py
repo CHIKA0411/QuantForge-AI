@@ -3,7 +3,7 @@ import datetime
 import numpy as np
 from apscheduler.schedulers.background import BackgroundScheduler
 from sqlalchemy.orm import Session
-from app.db import SpotPrice, OptionChain, VixData, init_db
+from app.db import SpotPrice, OptionChain, VixData, FuturePrice, FiiDiiActivity, init_db
 from app.nse_client import nse_client
 from app.greeks import calculate_greeks_vectorized
 from app.config import settings
@@ -14,12 +14,15 @@ logging.basicConfig(level=logging.INFO)
 scheduler = BackgroundScheduler()
 
 def scrape_and_store_job():
-    """Periodic job to collect NIFTY and BANKNIFTY options data and calculate Greeks."""
+    """Periodic job to collect option chains, VIX, futures, USDINR, FII/DII data, and calculate Greeks."""
     logger.info("Executing periodic market data collection job...")
     from app.db import SessionLocal
     db: Session = SessionLocal()
     try:
-        # Collect VIX value from NIFTY details first to save it
+        # Loop through all 4 target indices
+        symbols = ["NIFTY", "BANKNIFTY", "SENSEX", "BANKEX"]
+        
+        # Collect NIFTY first to get VIX and FII/DII flows
         nifty_data = nse_client.get_market_data("NIFTY")
         vix_val = nifty_data.get("vix", 13.5)
         timestamp = nifty_data.get("timestamp", datetime.datetime.now())
@@ -28,18 +31,38 @@ def scrape_and_store_job():
         vix_record = VixData(timestamp=timestamp, value=vix_val)
         db.merge(vix_record)
         
-        # Collect options data for both symbols
-        for symbol in ["NIFTY", "BANKNIFTY"]:
+        # Save FII/DII flow
+        fii_net = nifty_data.get("fii_net", 1250.0)
+        dii_net = nifty_data.get("dii_net", -450.0)
+        fii_dii_record = FiiDiiActivity(timestamp=timestamp, fii_net=fii_net, dii_net=dii_net)
+        db.merge(fii_dii_record)
+        
+        # Save USDINR Spot and Futures
+        usdinr_spot = nifty_data.get("usdinr_spot", 83.55)
+        usdinr_fut = nifty_data.get("usdinr_futures", 83.63)
+        
+        usdinr_spot_record = SpotPrice(timestamp=timestamp, symbol="USDINR", price=usdinr_spot)
+        db.merge(usdinr_spot_record)
+        
+        usdinr_fut_record = FuturePrice(timestamp=timestamp, symbol="USDINR", price=usdinr_fut)
+        db.merge(usdinr_fut_record)
+
+        for symbol in symbols:
             data = nifty_data if symbol == "NIFTY" else nse_client.get_market_data(symbol)
             
             spot = float(data["spot_price"])
             ts = data["timestamp"]
             expiry_date = data["expiry_date"]
             options = data["options"]
+            futures_price = data.get("futures_price", spot)
             
             # Save Spot Price
             spot_record = SpotPrice(timestamp=ts, symbol=symbol, price=spot)
             db.merge(spot_record)
+            
+            # Save Futures Price
+            futures_record = FuturePrice(timestamp=ts, symbol=symbol, price=futures_price)
+            db.merge(futures_record)
             
             if not options:
                 logger.warning(f"No option chain data collected for {symbol}.")

@@ -191,3 +191,84 @@ def calculate_support_resistance(options: List[Dict[str, Any]], spot_price: floa
         "supports": sorted(supports, key=lambda x: x["strike"]),
         "resistances": sorted(resistances, key=lambda x: x["strike"])
     }
+
+def calculate_oi_analytics(options: List[Dict[str, Any]]) -> Dict[str, Any]:
+    """
+    Calculate OI breakdown, writing/unwinding trends, strike heatmap, and walls.
+    """
+    ce_options = [opt for opt in options if opt["option_type"] == "CE"]
+    pe_options = [opt for opt in options if opt["option_type"] == "PE"]
+    
+    # Walls
+    call_wall = max(ce_options, key=lambda x: x["open_interest"]) if ce_options else {"strike_price": 0.0, "open_interest": 0}
+    put_wall = max(pe_options, key=lambda x: x["open_interest"]) if pe_options else {"strike_price": 0.0, "open_interest": 0}
+    
+    # Heatmap (top 10 by OI)
+    top_calls = sorted(ce_options, key=lambda x: x["open_interest"], reverse=True)[:10]
+    top_puts = sorted(pe_options, key=lambda x: x["open_interest"], reverse=True)[:10]
+    
+    # Writing (highest positive change in OI)
+    ce_writing = sorted([opt for opt in ce_options if opt.get("change_in_oi", 0) > 0], key=lambda x: x["change_in_oi"], reverse=True)[:3]
+    pe_writing = sorted([opt for opt in pe_options if opt.get("change_in_oi", 0) > 0], key=lambda x: x["change_in_oi"], reverse=True)[:3]
+    
+    # Unwinding (highest negative change in OI)
+    ce_unwinding = sorted([opt for opt in ce_options if opt.get("change_in_oi", 0) < 0], key=lambda x: x["change_in_oi"])[:3]
+    pe_unwinding = sorted([opt for opt in pe_options if opt.get("change_in_oi", 0) < 0], key=lambda x: x["change_in_oi"])[:3]
+    
+    def _format_strike_list(opts):
+        return [{"strike": o["strike_price"], "oi": o["open_interest"], "change_oi": o.get("change_in_oi", 0.0)} for o in opts]
+        
+    return {
+        "call_wall": {"strike": call_wall.get("strike_price", 0.0), "oi": call_wall.get("open_interest", 0.0)},
+        "put_wall": {"strike": put_wall.get("strike_price", 0.0), "oi": put_wall.get("open_interest", 0.0)},
+        "strike_heatmap": {
+            "calls": _format_strike_list(top_calls),
+            "puts": _format_strike_list(top_puts)
+        },
+        "writing": {
+            "calls": _format_strike_list(ce_writing),
+            "puts": _format_strike_list(pe_writing)
+        },
+        "unwinding": {
+            "calls": _format_strike_list(ce_unwinding),
+            "puts": _format_strike_list(pe_unwinding)
+        }
+    }
+
+def calculate_max_pain_with_shift(
+    options: List[Dict[str, Any]], 
+    spot_price: float, 
+    db: Any = None, 
+    symbol: str = "",
+    num_strikes: int = 5
+) -> Dict[str, Any]:
+    """Calculate current max pain level and the shift difference compared to previous session."""
+    current_max_pain = calculate_max_pain(options, spot_price, num_strikes)
+    
+    if not db or not symbol:
+        return {"current_max_pain": current_max_pain, "shift": 0.0}
+        
+    try:
+        from app.db import OptionChain
+        # Get last 2 distinct timestamps in options database
+        timestamps = db.query(OptionChain.timestamp).filter(OptionChain.symbol == symbol).distinct().order_by(OptionChain.timestamp.desc()).limit(2).all()
+        if len(timestamps) >= 2:
+            prev_ts = timestamps[1][0]
+            prev_options_db = db.query(OptionChain).filter(OptionChain.symbol == symbol, OptionChain.timestamp == prev_ts).all()
+            if prev_options_db:
+                prev_options = [
+                    {
+                        "strike_price": opt.strike_price,
+                        "option_type": opt.option_type,
+                        "open_interest": opt.open_interest,
+                        "volume": opt.volume
+                    }
+                    for opt in prev_options_db
+                ]
+                prev_max_pain = calculate_max_pain(prev_options, 0.0, num_strikes)
+                shift = current_max_pain - prev_max_pain
+                return {"current_max_pain": current_max_pain, "shift": shift}
+    except Exception:
+        pass
+        
+    return {"current_max_pain": current_max_pain, "shift": 0.0}

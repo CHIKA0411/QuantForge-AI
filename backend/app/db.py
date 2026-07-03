@@ -53,6 +53,50 @@ class VixData(Base):
         PrimaryKeyConstraint("timestamp"),
     )
 
+class FuturePrice(Base):
+    __tablename__ = "future_prices"
+    timestamp = Column(DateTime(timezone=True), nullable=False)
+    symbol = Column(String(20), nullable=False)
+    price = Column(Float, nullable=False)
+    
+    __table_args__ = (
+        PrimaryKeyConstraint("timestamp", "symbol"),
+    )
+
+class FiiDiiActivity(Base):
+    __tablename__ = "fii_dii_activity"
+    timestamp = Column(DateTime(timezone=True), nullable=False)
+    fii_net = Column(Float, default=0.0)  # in Crores
+    dii_net = Column(Float, default=0.0)  # in Crores
+    
+    __table_args__ = (
+        PrimaryKeyConstraint("timestamp"),
+    )
+
+class AlertLog(Base):
+    __tablename__ = "alert_logs"
+    id = Column(String(50), primary_key=True)
+    timestamp = Column(DateTime(timezone=True), nullable=False)
+    symbol = Column(String(20), nullable=False)
+    alert_type = Column(String(50), nullable=False)  # PCR, VIX, OI, etc.
+    message = Column(String(250), nullable=False)
+    channel = Column(String(20), default="ALL")  # Telegram, Email, WhatsApp
+
+class PredictionLog(Base):
+    __tablename__ = "prediction_logs"
+    timestamp = Column(DateTime(timezone=True), nullable=False)
+    symbol = Column(String(20), nullable=False)
+    bull_prob = Column(Float, nullable=False)
+    bear_prob = Column(Float, nullable=False)
+    neutral_prob = Column(Float, nullable=False)
+    regime = Column(String(50), nullable=False)
+    confidence = Column(Float, nullable=False)
+    reasons = Column(String(500), nullable=False)  # JSON-encoded list
+    
+    __table_args__ = (
+        PrimaryKeyConstraint("timestamp", "symbol"),
+    )
+
 # Global database parameters
 engine = None
 SessionLocal = None
@@ -119,7 +163,7 @@ def init_db():
                     logger.info("TimescaleDB extension is present. Converting tables to hypertables...")
                     
                     # Convert tables to hypertables if they aren't already
-                    for table in ["spot_prices", "option_chain", "vix_data"]:
+                    for table in ["spot_prices", "option_chain", "vix_data", "future_prices", "fii_dii_activity", "prediction_logs"]:
                         try:
                             conn.execute(text(f"SELECT create_hypertable('{table}', 'timestamp', if_not_exists => TRUE);"))
                             logger.info(f"Hypertable created for {table}")

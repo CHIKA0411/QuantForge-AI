@@ -9,9 +9,9 @@ from app.nse_client import nse_client
 from app.config import settings
 
 # Quantitative Engines
-from app.analytics import calculate_pcr, calculate_max_pain, calculate_support_resistance
+from app.analytics import calculate_pcr, calculate_max_pain, calculate_support_resistance, calculate_oi_analytics, calculate_max_pain_with_shift
 from app.dealer import calculate_dealer_exposures, find_gamma_flip_level, generate_gex_profile
-from app.volatility import get_volatility_smile, calculate_iv_skew, classify_volatility_regime, get_volatility_surface
+from app.volatility import get_volatility_smile, calculate_iv_skew, classify_volatility_regime, get_volatility_surface, calculate_historical_volatility, calculate_iv_rank_and_percentile, calculate_expected_moves
 
 router = APIRouter(prefix="/analytics", tags=["analytics"])
 
@@ -101,32 +101,56 @@ def get_current_options_data(symbol: str, db: Session) -> Tuple[float, float, da
 @router.get("/summary")
 def get_analytics_summary(symbol: str = Query(default="NIFTY"), db: Session = Depends(get_db)):
     """Return a single summary package containing basic and advanced metrics."""
-    spot_price, vix_val, expiry_date, T, options = get_current_options_data(symbol, db)
+    sym = symbol.upper()
+    spot_price, vix_val, expiry_date, T, options = get_current_options_data(sym, db)
     
     pcr = calculate_pcr(options, spot_price)
-    max_pain = calculate_max_pain(options, spot_price)
+    max_pain_data = calculate_max_pain_with_shift(options, spot_price, db, sym)
     sr = calculate_support_resistance(options, spot_price)
     
-    lot_size = settings.LOT_SIZE_NIFTY if symbol == "NIFTY" else settings.LOT_SIZE_BANKNIFTY
+    # Lot size selector
+    if sym == "NIFTY":
+        lot_size = settings.LOT_SIZE_NIFTY
+    elif sym == "BANKNIFTY":
+        lot_size = settings.LOT_SIZE_BANKNIFTY
+    elif sym == "SENSEX":
+        lot_size = settings.LOT_SIZE_SENSEX
+    elif sym == "BANKEX":
+        lot_size = settings.LOT_SIZE_BANKEX
+    else:
+        lot_size = 50
+        
     exposures = calculate_dealer_exposures(options, spot_price, lot_size, T, settings.RISK_FREE_RATE)
-    
     flip_level = find_gamma_flip_level(options, spot_price, lot_size, T, settings.RISK_FREE_RATE)
     skew = calculate_iv_skew(options, spot_price)
     regime = classify_volatility_regime(vix_val)
 
+    # Volatility metrics
+    hist_vol = calculate_historical_volatility(db, sym)
+    iv_rank, iv_pct = calculate_iv_rank_and_percentile(db, sym, vix_val)
+    expected_moves = calculate_expected_moves(spot_price, vix_val, expiry_date)
+
     return {
-        "symbol": symbol,
+        "symbol": sym,
         "spot_price": spot_price,
         "expiry_date": expiry_date,
         "time_to_expiry_years": round(T, 5),
         "pcr": pcr,
-        "max_pain": max_pain,
+        "max_pain": max_pain_data["current_max_pain"],
+        "max_pain_shift": max_pain_data["shift"],
         "support_resistance": sr,
         "total_gex": round(exposures["total_gex"], 2),
         "total_dex": round(exposures["total_dex"], 2),
         "gamma_flip_level": flip_level,
         "iv_skew": skew,
-        "volatility_regime": regime
+        "volatility_regime": regime,
+        "volatility_metrics": {
+            "historical_volatility": hist_vol,
+            "implied_volatility": vix_val,
+            "iv_rank": iv_rank,
+            "iv_percentile": iv_pct
+        },
+        "expected_move": expected_moves
     }
 
 @router.get("/pcr")
@@ -150,9 +174,20 @@ def get_pcr_data(
 @router.get("/dealer-positioning")
 def get_dealer_positioning(symbol: str = Query(default="NIFTY"), db: Session = Depends(get_db)):
     """Get strike-by-strike dealer Gamma and Delta exposures, and the Gamma Flip level."""
-    spot_price, _, _, T, options = get_current_options_data(symbol, db)
+    sym = symbol.upper()
+    spot_price, _, _, T, options = get_current_options_data(sym, db)
     
-    lot_size = settings.LOT_SIZE_NIFTY if symbol == "NIFTY" else settings.LOT_SIZE_BANKNIFTY
+    if sym == "NIFTY":
+        lot_size = settings.LOT_SIZE_NIFTY
+    elif sym == "BANKNIFTY":
+        lot_size = settings.LOT_SIZE_BANKNIFTY
+    elif sym == "SENSEX":
+        lot_size = settings.LOT_SIZE_SENSEX
+    elif sym == "BANKEX":
+        lot_size = settings.LOT_SIZE_BANKEX
+    else:
+        lot_size = 50
+        
     exposures = calculate_dealer_exposures(options, spot_price, lot_size, T, settings.RISK_FREE_RATE)
     flip_level = find_gamma_flip_level(options, spot_price, lot_size, T, settings.RISK_FREE_RATE)
     
@@ -168,7 +203,7 @@ def get_dealer_positioning(symbol: str = Query(default="NIFTY"), db: Session = D
             filtered_strikes.append(strike_copy)
 
     return {
-        "symbol": symbol,
+        "symbol": sym,
         "spot_price": spot_price,
         "gamma_flip_level": flip_level,
         "total_gex": round(exposures["total_gex"], 2),
@@ -179,14 +214,25 @@ def get_dealer_positioning(symbol: str = Query(default="NIFTY"), db: Session = D
 @router.get("/gex-profile")
 def get_gex_profile_data(symbol: str = Query(default="NIFTY"), db: Session = Depends(get_db)):
     """Get Net GEX vs Spot Price profile curve data points."""
-    spot_price, _, _, T, options = get_current_options_data(symbol, db)
-    lot_size = settings.LOT_SIZE_NIFTY if symbol == "NIFTY" else settings.LOT_SIZE_BANKNIFTY
+    sym = symbol.upper()
+    spot_price, _, _, T, options = get_current_options_data(sym, db)
     
+    if sym == "NIFTY":
+        lot_size = settings.LOT_SIZE_NIFTY
+    elif sym == "BANKNIFTY":
+        lot_size = settings.LOT_SIZE_BANKNIFTY
+    elif sym == "SENSEX":
+        lot_size = settings.LOT_SIZE_SENSEX
+    elif sym == "BANKEX":
+        lot_size = settings.LOT_SIZE_BANKEX
+    else:
+        lot_size = 50
+        
     profile = generate_gex_profile(options, spot_price, lot_size, T, settings.RISK_FREE_RATE)
     flip_level = find_gamma_flip_level(options, spot_price, lot_size, T, settings.RISK_FREE_RATE)
     
     return {
-        "symbol": symbol,
+        "symbol": sym,
         "spot_price": spot_price,
         "gamma_flip_level": flip_level,
         "profile": profile
@@ -220,4 +266,29 @@ def get_vol_surface(symbol: str = Query(default="NIFTY"), db: Session = Depends(
         "symbol": symbol,
         "spot_price": spot_price,
         "surface": filtered_surface
+    }
+
+@router.get("/oi")
+def get_oi_analytics(symbol: str = Query(default="NIFTY"), db: Session = Depends(get_db)):
+    """Get detailed Open Interest analytics (Highest Call/Put, writing, unwinding, heatmap, walls)."""
+    sym = symbol.upper()
+    spot_price, _, _, _, options = get_current_options_data(sym, db)
+    oi_data = calculate_oi_analytics(options)
+    return {
+        "symbol": sym,
+        "spot_price": spot_price,
+        **oi_data
+    }
+
+@router.get("/maxpain")
+def get_max_pain(symbol: str = Query(default="NIFTY"), db: Session = Depends(get_db)):
+    """Get the latest Max Pain level and shift from previous session."""
+    sym = symbol.upper()
+    spot_price, _, _, _, options = get_current_options_data(sym, db)
+    max_pain_data = calculate_max_pain_with_shift(options, spot_price, db, sym)
+    return {
+        "symbol": sym,
+        "spot_price": spot_price,
+        "max_pain": max_pain_data["current_max_pain"],
+        "shift": max_pain_data["shift"]
     }

@@ -37,17 +37,22 @@ def get_market_forecast(symbol: str = Query(default="NIFTY"), db: Session = Depe
     }
 
 @router.get("/backtest")
-def get_strategy_backtest(symbol: str = Query(default="NIFTY"), db: Session = Depends(get_db)):
-    """Run historical backtest for the ML options intelligence strategy."""
+def get_strategy_backtest(
+    symbol: str = Query(default="NIFTY"),
+    strategy: str = Query(default="AI_Probability"),
+    db: Session = Depends(get_db)
+):
+    """Run historical backtest for the selected options strategy."""
+    sym = symbol.upper()
     # 1. Fetch history from database or simulation fallback
-    # Limit to 300 data points to run backtest quickly inside API response
-    history_df = get_historical_features(db, symbol, limit=300)
+    history_df = get_historical_features(db, sym, limit=300)
     
     # 2. Run backtest simulation
-    backtest_results = run_ml_backtest(history_df, symbol)
+    backtest_results = run_ml_backtest(history_df, sym, strategy)
     
     return {
-        "symbol": symbol,
+        "symbol": sym,
+        "strategy": strategy,
         "results": backtest_results
     }
 

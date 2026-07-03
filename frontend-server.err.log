@@ -416,3 +416,1514 @@ Error: socket hang up
     at ignore-listed frames {
   code: 'ECONNRESET'
 }
+[browser] TypeError: Failed to fetch
+    at fetchData (file://C:/Users/abham/OneDrive/Desktop/desktop/ML/QuantForge AI/frontend/.next/dev/static/chunks/app_page_tsx_1s_43kl._.js:85:35)
+    at Dashboard.useEffect (file://C:/Users/abham/OneDrive/Desktop/desktop/ML/QuantForge AI/frontend/.next/dev/static/chunks/app_page_tsx_1s_43kl._.js:142:21) (file://C:/Users/abham/OneDrive/Desktop/desktop/ML/QuantForge AI/frontend/.next/dev/static/chunks/app_page_tsx_1s_43kl._.js:120:21)
+Failed to proxy http://127.0.0.1:8000/api/analytics/volatility-smile?symbol=NIFTY Error: socket hang up
+    at ignore-listed frames {
+  code: 'ECONNRESET'
+}
+Error: socket hang up
+    at ignore-listed frames {
+  code: 'ECONNRESET'
+}
+Failed to proxy http://127.0.0.1:8000/api/market/option-chain?symbol=NIFTY Error: socket hang up
+    at ignore-listed frames {
+  code: 'ECONNRESET'
+}
+Error: socket hang up
+    at ignore-listed frames {
+  code: 'ECONNRESET'
+}
+⚠ Fast Refresh had to perform a full reload due to a runtime error.
+⚠ Fast Refresh had to perform a full reload due to a runtime error.
+Failed to proxy http://127.0.0.1:8000/api/market/futures?symbol=SENSEX Error: read ECONNRESET
+    at ignore-listed frames {
+  errno: -4077,
+  code: 'ECONNRESET',
+  syscall: 'read'
+}
+Error: read ECONNRESET
+    at ignore-listed frames {
+  errno: -4077,
+  code: 'ECONNRESET',
+  syscall: 'read'
+}
+Failed to proxy http://127.0.0.1:8000/api/signals/backtest?symbol=BANKNIFTY&strategy=AI_Probability Error: socket hang up
+    at ignore-listed frames {
+  code: 'ECONNRESET'
+}
+Error: socket hang up
+    at ignore-listed frames {
+  code: 'ECONNRESET'
+}
+Failed to proxy http://127.0.0.1:8000/api/signals/backtest?symbol=BANKNIFTY&strategy=PCR_Strategy Error: socket hang up
+    at ignore-listed frames {
+  code: 'ECONNRESET'
+}
+Error: socket hang up
+    at ignore-listed frames {
+  code: 'ECONNRESET'
+}
+Failed to proxy http://127.0.0.1:8000/api/signals/backtest?symbol=BANKNIFTY&strategy=Max_Pain_Strategy Error: socket hang up
+    at ignore-listed frames {
+  code: 'ECONNRESET'
+}
+Error: socket hang up
+    at ignore-listed frames {
+  code: 'ECONNRESET'
+}
+[browser] The width(0) and height(0) of chart should be greater than 0,
+       please check the style of container, or the props width(100%) and height(100%),
+       or add a minWidth(0) or minHeight(undefined) or use aspect(undefined) to control the
+       height and width. (file://C:/Users/abham/OneDrive/Desktop/desktop/ML/QuantForge AI/frontend/.next/dev/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477:13)
+[browser] The width(0) and height(0) of chart should be greater than 0,
+       please check the style of container, or the props width(100%) and height(100%),
+       or add a minWidth(0) or minHeight(undefined) or use aspect(undefined) to control the
+       height and width. (file://C:/Users/abham/OneDrive/Desktop/desktop/ML/QuantForge AI/frontend/.next/dev/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477:13)
+[browser] The width(0) and height(0) of chart should be greater than 0,
+       please check the style of container, or the props width(100%) and height(100%),
+       or add a minWidth(0) or minHeight(undefined) or use aspect(undefined) to control the
+       height and width. (file://C:/Users/abham/OneDrive/Desktop/desktop/ML/QuantForge AI/frontend/.next/dev/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477:13)
+[browser] The width(0) and height(0) of chart should be greater than 0,
+       please check the style of container, or the props width(100%) and height(100%),
+       or add a minWidth(0) or minHeight(undefined) or use aspect(undefined) to control the
+       height and width. (file://C:/Users/abham/OneDrive/Desktop/desktop/ML/QuantForge AI/frontend/.next/dev/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477:13)
+[browser] The width(0) and height(0) of chart should be greater than 0,
+       please check the style of container, or the props width(100%) and height(100%),
+       or add a minWidth(0) or minHeight(undefined) or use aspect(undefined) to control the
+       height and width. (file://C:/Users/abham/OneDrive/Desktop/desktop/ML/QuantForge AI/frontend/.next/dev/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477:13)
+[browser] The width(0) and height(0) of chart should be greater than 0,
+       please check the style of container, or the props width(100%) and height(100%),
+       or add a minWidth(0) or minHeight(undefined) or use aspect(undefined) to control the
+       height and width. (file://C:/Users/abham/OneDrive/Desktop/desktop/ML/QuantForge AI/frontend/.next/dev/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477:13)
+[browser] The width(0) and height(0) of chart should be greater than 0,
+       please check the style of container, or the props width(100%) and height(100%),
+       or add a minWidth(0) or minHeight(undefined) or use aspect(undefined) to control the
+       height and width. (file://C:/Users/abham/OneDrive/Desktop/desktop/ML/QuantForge AI/frontend/.next/dev/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477:13)
+[browser] The width(0) and height(0) of chart should be greater than 0,
+       please check the style of container, or the props width(100%) and height(100%),
+       or add a minWidth(0) or minHeight(undefined) or use aspect(undefined) to control the
+       height and width. (file://C:/Users/abham/OneDrive/Desktop/desktop/ML/QuantForge AI/frontend/.next/dev/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477:13)
+[browser] The width(0) and height(0) of chart should be greater than 0,
+       please check the style of container, or the props width(100%) and height(100%),
+       or add a minWidth(0) or minHeight(undefined) or use aspect(undefined) to control the
+       height and width. (file://C:/Users/abham/OneDrive/Desktop/desktop/ML/QuantForge AI/frontend/.next/dev/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477:13)
+[browser] The width(0) and height(0) of chart should be greater than 0,
+       please check the style of container, or the props width(100%) and height(100%),
+       or add a minWidth(0) or minHeight(undefined) or use aspect(undefined) to control the
+       height and width. (file://C:/Users/abham/OneDrive/Desktop/desktop/ML/QuantForge AI/frontend/.next/dev/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477:13)
+[browser] The width(0) and height(0) of chart should be greater than 0,
+       please check the style of container, or the props width(100%) and height(100%),
+       or add a minWidth(0) or minHeight(undefined) or use aspect(undefined) to control the
+       height and width. (file://C:/Users/abham/OneDrive/Desktop/desktop/ML/QuantForge AI/frontend/.next/dev/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477:13)
+[browser] The width(0) and height(0) of chart should be greater than 0,
+       please check the style of container, or the props width(100%) and height(100%),
+       or add a minWidth(0) or minHeight(undefined) or use aspect(undefined) to control the
+       height and width. (file://C:/Users/abham/OneDrive/Desktop/desktop/ML/QuantForge AI/frontend/.next/dev/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477:13)
+[browser] The width(0) and height(0) of chart should be greater than 0,
+       please check the style of container, or the props width(100%) and height(100%),
+       or add a minWidth(0) or minHeight(undefined) or use aspect(undefined) to control the
+       height and width. (file://C:/Users/abham/OneDrive/Desktop/desktop/ML/QuantForge AI/frontend/.next/dev/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477:13)
+[browser] The width(0) and height(0) of chart should be greater than 0,
+       please check the style of container, or the props width(100%) and height(100%),
+       or add a minWidth(0) or minHeight(undefined) or use aspect(undefined) to control the
+       height and width. (file://C:/Users/abham/OneDrive/Desktop/desktop/ML/QuantForge AI/frontend/.next/dev/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477:13)
+[browser] The width(0) and height(0) of chart should be greater than 0,
+       please check the style of container, or the props width(100%) and height(100%),
+       or add a minWidth(0) or minHeight(undefined) or use aspect(undefined) to control the
+       height and width. (file://C:/Users/abham/OneDrive/Desktop/desktop/ML/QuantForge AI/frontend/.next/dev/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477:13)
+[browser] The width(0) and height(0) of chart should be greater than 0,
+       please check the style of container, or the props width(100%) and height(100%),
+       or add a minWidth(0) or minHeight(undefined) or use aspect(undefined) to control the
+       height and width. (file://C:/Users/abham/OneDrive/Desktop/desktop/ML/QuantForge AI/frontend/.next/dev/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477:13)
+[browser] The width(0) and height(0) of chart should be greater than 0,
+       please check the style of container, or the props width(100%) and height(100%),
+       or add a minWidth(0) or minHeight(undefined) or use aspect(undefined) to control the
+       height and width. (file://C:/Users/abham/OneDrive/Desktop/desktop/ML/QuantForge AI/frontend/.next/dev/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477:13)
+[browser] The width(0) and height(0) of chart should be greater than 0,
+       please check the style of container, or the props width(100%) and height(100%),
+       or add a minWidth(0) or minHeight(undefined) or use aspect(undefined) to control the
+       height and width. (file://C:/Users/abham/OneDrive/Desktop/desktop/ML/QuantForge AI/frontend/.next/dev/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477:13)
+[browser] The width(0) and height(0) of chart should be greater than 0,
+       please check the style of container, or the props width(100%) and height(100%),
+       or add a minWidth(0) or minHeight(undefined) or use aspect(undefined) to control the
+       height and width. (file://C:/Users/abham/OneDrive/Desktop/desktop/ML/QuantForge AI/frontend/.next/dev/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477:13)
+[browser] The width(0) and height(0) of chart should be greater than 0,
+       please check the style of container, or the props width(100%) and height(100%),
+       or add a minWidth(0) or minHeight(undefined) or use aspect(undefined) to control the
+       height and width. (file://C:/Users/abham/OneDrive/Desktop/desktop/ML/QuantForge AI/frontend/.next/dev/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477:13)
+[browser] The width(0) and height(0) of chart should be greater than 0,
+       please check the style of container, or the props width(100%) and height(100%),
+       or add a minWidth(0) or minHeight(undefined) or use aspect(undefined) to control the
+       height and width. (file://C:/Users/abham/OneDrive/Desktop/desktop/ML/QuantForge AI/frontend/.next/dev/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477:13)
+[browser] The width(0) and height(0) of chart should be greater than 0,
+       please check the style of container, or the props width(100%) and height(100%),
+       or add a minWidth(0) or minHeight(undefined) or use aspect(undefined) to control the
+       height and width. (file://C:/Users/abham/OneDrive/Desktop/desktop/ML/QuantForge AI/frontend/.next/dev/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477:13)
+[browser] The width(0) and height(0) of chart should be greater than 0,
+       please check the style of container, or the props width(100%) and height(100%),
+       or add a minWidth(0) or minHeight(undefined) or use aspect(undefined) to control the
+       height and width. (file://C:/Users/abham/OneDrive/Desktop/desktop/ML/QuantForge AI/frontend/.next/dev/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477:13)
+[browser] The width(0) and height(0) of chart should be greater than 0,
+       please check the style of container, or the props width(100%) and height(100%),
+       or add a minWidth(0) or minHeight(undefined) or use aspect(undefined) to control the
+       height and width. (file://C:/Users/abham/OneDrive/Desktop/desktop/ML/QuantForge AI/frontend/.next/dev/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477:13)
+[browser] The width(0) and height(0) of chart should be greater than 0,
+       please check the style of container, or the props width(100%) and height(100%),
+       or add a minWidth(0) or minHeight(undefined) or use aspect(undefined) to control the
+       height and width. (file://C:/Users/abham/OneDrive/Desktop/desktop/ML/QuantForge AI/frontend/.next/dev/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477:13)
+[browser] The width(0) and height(0) of chart should be greater than 0,
+       please check the style of container, or the props width(100%) and height(100%),
+       or add a minWidth(0) or minHeight(undefined) or use aspect(undefined) to control the
+       height and width. (file://C:/Users/abham/OneDrive/Desktop/desktop/ML/QuantForge AI/frontend/.next/dev/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477:13)
+[browser] The width(0) and height(0) of chart should be greater than 0,
+       please check the style of container, or the props width(100%) and height(100%),
+       or add a minWidth(0) or minHeight(undefined) or use aspect(undefined) to control the
+       height and width. (file://C:/Users/abham/OneDrive/Desktop/desktop/ML/QuantForge AI/frontend/.next/dev/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477:13)
+[browser] The width(0) and height(0) of chart should be greater than 0,
+       please check the style of container, or the props width(100%) and height(100%),
+       or add a minWidth(0) or minHeight(undefined) or use aspect(undefined) to control the
+       height and width. (file://C:/Users/abham/OneDrive/Desktop/desktop/ML/QuantForge AI/frontend/.next/dev/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477:13)
+[browser] The width(0) and height(0) of chart should be greater than 0,
+       please check the style of container, or the props width(100%) and height(100%),
+       or add a minWidth(0) or minHeight(undefined) or use aspect(undefined) to control the
+       height and width. (file://C:/Users/abham/OneDrive/Desktop/desktop/ML/QuantForge AI/frontend/.next/dev/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477:13)
+[browser] The width(0) and height(0) of chart should be greater than 0,
+       please check the style of container, or the props width(100%) and height(100%),
+       or add a minWidth(0) or minHeight(undefined) or use aspect(undefined) to control the
+       height and width. (file://C:/Users/abham/OneDrive/Desktop/desktop/ML/QuantForge AI/frontend/.next/dev/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477:13)
+[browser] The width(0) and height(0) of chart should be greater than 0,
+       please check the style of container, or the props width(100%) and height(100%),
+       or add a minWidth(0) or minHeight(undefined) or use aspect(undefined) to control the
+       height and width. (file://C:/Users/abham/OneDrive/Desktop/desktop/ML/QuantForge AI/frontend/.next/dev/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477:13)
+[browser] The width(0) and height(0) of chart should be greater than 0,
+       please check the style of container, or the props width(100%) and height(100%),
+       or add a minWidth(0) or minHeight(undefined) or use aspect(undefined) to control the
+       height and width. (file://C:/Users/abham/OneDrive/Desktop/desktop/ML/QuantForge AI/frontend/.next/dev/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477:13)
+[browser] The width(0) and height(0) of chart should be greater than 0,
+       please check the style of container, or the props width(100%) and height(100%),
+       or add a minWidth(0) or minHeight(undefined) or use aspect(undefined) to control the
+       height and width. (file://C:/Users/abham/OneDrive/Desktop/desktop/ML/QuantForge AI/frontend/.next/dev/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477:13)
+[browser] The width(0) and height(0) of chart should be greater than 0,
+       please check the style of container, or the props width(100%) and height(100%),
+       or add a minWidth(0) or minHeight(undefined) or use aspect(undefined) to control the
+       height and width. (file://C:/Users/abham/OneDrive/Desktop/desktop/ML/QuantForge AI/frontend/.next/dev/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477:13)
+[browser] The width(0) and height(0) of chart should be greater than 0,
+       please check the style of container, or the props width(100%) and height(100%),
+       or add a minWidth(0) or minHeight(undefined) or use aspect(undefined) to control the
+       height and width. (file://C:/Users/abham/OneDrive/Desktop/desktop/ML/QuantForge AI/frontend/.next/dev/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477:13)
+[browser] The width(0) and height(0) of chart should be greater than 0,
+       please check the style of container, or the props width(100%) and height(100%),
+       or add a minWidth(0) or minHeight(undefined) or use aspect(undefined) to control the
+       height and width. (file://C:/Users/abham/OneDrive/Desktop/desktop/ML/QuantForge AI/frontend/.next/dev/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477:13)
+[browser] The width(0) and height(0) of chart should be greater than 0,
+       please check the style of container, or the props width(100%) and height(100%),
+       or add a minWidth(0) or minHeight(undefined) or use aspect(undefined) to control the
+       height and width. (file://C:/Users/abham/OneDrive/Desktop/desktop/ML/QuantForge AI/frontend/.next/dev/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477:13)
+[browser] The width(0) and height(0) of chart should be greater than 0,
+       please check the style of container, or the props width(100%) and height(100%),
+       or add a minWidth(0) or minHeight(undefined) or use aspect(undefined) to control the
+       height and width. (file://C:/Users/abham/OneDrive/Desktop/desktop/ML/QuantForge AI/frontend/.next/dev/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477:13)
+[browser] The width(0) and height(0) of chart should be greater than 0,
+       please check the style of container, or the props width(100%) and height(100%),
+       or add a minWidth(0) or minHeight(undefined) or use aspect(undefined) to control the
+       height and width. (file://C:/Users/abham/OneDrive/Desktop/desktop/ML/QuantForge AI/frontend/.next/dev/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477:13)
+[browser] The width(0) and height(0) of chart should be greater than 0,
+       please check the style of container, or the props width(100%) and height(100%),
+       or add a minWidth(0) or minHeight(undefined) or use aspect(undefined) to control the
+       height and width. (file://C:/Users/abham/OneDrive/Desktop/desktop/ML/QuantForge AI/frontend/.next/dev/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477:13)
+[browser] The width(0) and height(0) of chart should be greater than 0,
+       please check the style of container, or the props width(100%) and height(100%),
+       or add a minWidth(0) or minHeight(undefined) or use aspect(undefined) to control the
+       height and width. (file://C:/Users/abham/OneDrive/Desktop/desktop/ML/QuantForge AI/frontend/.next/dev/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477:13)
+[browser] The width(0) and height(0) of chart should be greater than 0,
+       please check the style of container, or the props width(100%) and height(100%),
+       or add a minWidth(0) or minHeight(undefined) or use aspect(undefined) to control the
+       height and width. (file://C:/Users/abham/OneDrive/Desktop/desktop/ML/QuantForge AI/frontend/.next/dev/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477:13)
+[browser] The width(0) and height(0) of chart should be greater than 0,
+       please check the style of container, or the props width(100%) and height(100%),
+       or add a minWidth(0) or minHeight(undefined) or use aspect(undefined) to control the
+       height and width. (file://C:/Users/abham/OneDrive/Desktop/desktop/ML/QuantForge AI/frontend/.next/dev/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477:13)
+[browser] The width(0) and height(0) of chart should be greater than 0,
+       please check the style of container, or the props width(100%) and height(100%),
+       or add a minWidth(0) or minHeight(undefined) or use aspect(undefined) to control the
+       height and width. (file://C:/Users/abham/OneDrive/Desktop/desktop/ML/QuantForge AI/frontend/.next/dev/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477:13)
+[browser] The width(0) and height(0) of chart should be greater than 0,
+       please check the style of container, or the props width(100%) and height(100%),
+       or add a minWidth(0) or minHeight(undefined) or use aspect(undefined) to control the
+       height and width. (file://C:/Users/abham/OneDrive/Desktop/desktop/ML/QuantForge AI/frontend/.next/dev/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477:13)
+[browser] The width(0) and height(0) of chart should be greater than 0,
+       please check the style of container, or the props width(100%) and height(100%),
+       or add a minWidth(0) or minHeight(undefined) or use aspect(undefined) to control the
+       height and width. (file://C:/Users/abham/OneDrive/Desktop/desktop/ML/QuantForge AI/frontend/.next/dev/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477:13)
+[browser] The width(0) and height(0) of chart should be greater than 0,
+       please check the style of container, or the props width(100%) and height(100%),
+       or add a minWidth(0) or minHeight(undefined) or use aspect(undefined) to control the
+       height and width. (file://C:/Users/abham/OneDrive/Desktop/desktop/ML/QuantForge AI/frontend/.next/dev/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477:13)
+[browser] The width(0) and height(0) of chart should be greater than 0,
+       please check the style of container, or the props width(100%) and height(100%),
+       or add a minWidth(0) or minHeight(undefined) or use aspect(undefined) to control the
+       height and width. (file://C:/Users/abham/OneDrive/Desktop/desktop/ML/QuantForge AI/frontend/.next/dev/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477:13)
+[browser] The width(0) and height(0) of chart should be greater than 0,
+       please check the style of container, or the props width(100%) and height(100%),
+       or add a minWidth(0) or minHeight(undefined) or use aspect(undefined) to control the
+       height and width. (file://C:/Users/abham/OneDrive/Desktop/desktop/ML/QuantForge AI/frontend/.next/dev/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477:13)
+[browser] The width(0) and height(0) of chart should be greater than 0,
+       please check the style of container, or the props width(100%) and height(100%),
+       or add a minWidth(0) or minHeight(undefined) or use aspect(undefined) to control the
+       height and width. (file://C:/Users/abham/OneDrive/Desktop/desktop/ML/QuantForge AI/frontend/.next/dev/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477:13)
+[browser] The width(0) and height(0) of chart should be greater than 0,
+       please check the style of container, or the props width(100%) and height(100%),
+       or add a minWidth(0) or minHeight(undefined) or use aspect(undefined) to control the
+       height and width. (file://C:/Users/abham/OneDrive/Desktop/desktop/ML/QuantForge AI/frontend/.next/dev/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477:13)
+[browser] The width(0) and height(0) of chart should be greater than 0,
+       please check the style of container, or the props width(100%) and height(100%),
+       or add a minWidth(0) or minHeight(undefined) or use aspect(undefined) to control the
+       height and width. (file://C:/Users/abham/OneDrive/Desktop/desktop/ML/QuantForge AI/frontend/.next/dev/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477:13)
+[browser] The width(0) and height(0) of chart should be greater than 0,
+       please check the style of container, or the props width(100%) and height(100%),
+       or add a minWidth(0) or minHeight(undefined) or use aspect(undefined) to control the
+       height and width. (file://C:/Users/abham/OneDrive/Desktop/desktop/ML/QuantForge AI/frontend/.next/dev/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477:13)
+[browser] The width(0) and height(0) of chart should be greater than 0,
+       please check the style of container, or the props width(100%) and height(100%),
+       or add a minWidth(0) or minHeight(undefined) or use aspect(undefined) to control the
+       height and width. (file://C:/Users/abham/OneDrive/Desktop/desktop/ML/QuantForge AI/frontend/.next/dev/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477:13)
+[browser] The width(0) and height(0) of chart should be greater than 0,
+       please check the style of container, or the props width(100%) and height(100%),
+       or add a minWidth(0) or minHeight(undefined) or use aspect(undefined) to control the
+       height and width. (file://C:/Users/abham/OneDrive/Desktop/desktop/ML/QuantForge AI/frontend/.next/dev/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477:13)
+[browser] The width(0) and height(0) of chart should be greater than 0,
+       please check the style of container, or the props width(100%) and height(100%),
+       or add a minWidth(0) or minHeight(undefined) or use aspect(undefined) to control the
+       height and width. (file://C:/Users/abham/OneDrive/Desktop/desktop/ML/QuantForge AI/frontend/.next/dev/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477:13)
+[browser] The width(0) and height(0) of chart should be greater than 0,
+       please check the style of container, or the props width(100%) and height(100%),
+       or add a minWidth(0) or minHeight(undefined) or use aspect(undefined) to control the
+       height and width. (file://C:/Users/abham/OneDrive/Desktop/desktop/ML/QuantForge AI/frontend/.next/dev/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477:13)
+[browser] The width(0) and height(0) of chart should be greater than 0,
+       please check the style of container, or the props width(100%) and height(100%),
+       or add a minWidth(0) or minHeight(undefined) or use aspect(undefined) to control the
+       height and width. (file://C:/Users/abham/OneDrive/Desktop/desktop/ML/QuantForge AI/frontend/.next/dev/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477:13)
+[browser] The width(0) and height(0) of chart should be greater than 0,
+       please check the style of container, or the props width(100%) and height(100%),
+       or add a minWidth(0) or minHeight(undefined) or use aspect(undefined) to control the
+       height and width. (file://C:/Users/abham/OneDrive/Desktop/desktop/ML/QuantForge AI/frontend/.next/dev/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477:13)
+[browser] The width(0) and height(0) of chart should be greater than 0,
+       please check the style of container, or the props width(100%) and height(100%),
+       or add a minWidth(0) or minHeight(undefined) or use aspect(undefined) to control the
+       height and width. (file://C:/Users/abham/OneDrive/Desktop/desktop/ML/QuantForge AI/frontend/.next/dev/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477:13)
+[browser] The width(0) and height(0) of chart should be greater than 0,
+       please check the style of container, or the props width(100%) and height(100%),
+       or add a minWidth(0) or minHeight(undefined) or use aspect(undefined) to control the
+       height and width. (file://C:/Users/abham/OneDrive/Desktop/desktop/ML/QuantForge AI/frontend/.next/dev/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477:13)
+[browser] The width(0) and height(0) of chart should be greater than 0,
+       please check the style of container, or the props width(100%) and height(100%),
+       or add a minWidth(0) or minHeight(undefined) or use aspect(undefined) to control the
+       height and width. (file://C:/Users/abham/OneDrive/Desktop/desktop/ML/QuantForge AI/frontend/.next/dev/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477:13)
+[browser] The width(0) and height(0) of chart should be greater than 0,
+       please check the style of container, or the props width(100%) and height(100%),
+       or add a minWidth(0) or minHeight(undefined) or use aspect(undefined) to control the
+       height and width. (file://C:/Users/abham/OneDrive/Desktop/desktop/ML/QuantForge AI/frontend/.next/dev/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477:13)
+[browser] The width(0) and height(0) of chart should be greater than 0,
+       please check the style of container, or the props width(100%) and height(100%),
+       or add a minWidth(0) or minHeight(undefined) or use aspect(undefined) to control the
+       height and width. (file://C:/Users/abham/OneDrive/Desktop/desktop/ML/QuantForge AI/frontend/.next/dev/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477:13)
+[browser] The width(0) and height(0) of chart should be greater than 0,
+       please check the style of container, or the props width(100%) and height(100%),
+       or add a minWidth(0) or minHeight(undefined) or use aspect(undefined) to control the
+       height and width. (file://C:/Users/abham/OneDrive/Desktop/desktop/ML/QuantForge AI/frontend/.next/dev/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477:13)
+[browser] The width(0) and height(0) of chart should be greater than 0,
+       please check the style of container, or the props width(100%) and height(100%),
+       or add a minWidth(0) or minHeight(undefined) or use aspect(undefined) to control the
+       height and width. (file://C:/Users/abham/OneDrive/Desktop/desktop/ML/QuantForge AI/frontend/.next/dev/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477:13)
+[browser] The width(0) and height(0) of chart should be greater than 0,
+       please check the style of container, or the props width(100%) and height(100%),
+       or add a minWidth(0) or minHeight(undefined) or use aspect(undefined) to control the
+       height and width. (file://C:/Users/abham/OneDrive/Desktop/desktop/ML/QuantForge AI/frontend/.next/dev/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477:13)
+[browser] The width(0) and height(0) of chart should be greater than 0,
+       please check the style of container, or the props width(100%) and height(100%),
+       or add a minWidth(0) or minHeight(undefined) or use aspect(undefined) to control the
+       height and width. (file://C:/Users/abham/OneDrive/Desktop/desktop/ML/QuantForge AI/frontend/.next/dev/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477:13)
+[browser] The width(0) and height(0) of chart should be greater than 0,
+       please check the style of container, or the props width(100%) and height(100%),
+       or add a minWidth(0) or minHeight(undefined) or use aspect(undefined) to control the
+       height and width. (file://C:/Users/abham/OneDrive/Desktop/desktop/ML/QuantForge AI/frontend/.next/dev/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477:13)
+[browser] The width(0) and height(0) of chart should be greater than 0,
+       please check the style of container, or the props width(100%) and height(100%),
+       or add a minWidth(0) or minHeight(undefined) or use aspect(undefined) to control the
+       height and width. (file://C:/Users/abham/OneDrive/Desktop/desktop/ML/QuantForge AI/frontend/.next/dev/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477:13)
+[browser] The width(0) and height(0) of chart should be greater than 0,
+       please check the style of container, or the props width(100%) and height(100%),
+       or add a minWidth(0) or minHeight(undefined) or use aspect(undefined) to control the
+       height and width. (file://C:/Users/abham/OneDrive/Desktop/desktop/ML/QuantForge AI/frontend/.next/dev/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477:13)
+[browser] The width(0) and height(0) of chart should be greater than 0,
+       please check the style of container, or the props width(100%) and height(100%),
+       or add a minWidth(0) or minHeight(undefined) or use aspect(undefined) to control the
+       height and width. (file://C:/Users/abham/OneDrive/Desktop/desktop/ML/QuantForge AI/frontend/.next/dev/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477:13)
+[browser] The width(0) and height(0) of chart should be greater than 0,
+       please check the style of container, or the props width(100%) and height(100%),
+       or add a minWidth(0) or minHeight(undefined) or use aspect(undefined) to control the
+       height and width. (file://C:/Users/abham/OneDrive/Desktop/desktop/ML/QuantForge AI/frontend/.next/dev/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477:13)
+[browser] The width(0) and height(0) of chart should be greater than 0,
+       please check the style of container, or the props width(100%) and height(100%),
+       or add a minWidth(0) or minHeight(undefined) or use aspect(undefined) to control the
+       height and width. (file://C:/Users/abham/OneDrive/Desktop/desktop/ML/QuantForge AI/frontend/.next/dev/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477:13)
+[browser] The width(0) and height(0) of chart should be greater than 0,
+       please check the style of container, or the props width(100%) and height(100%),
+       or add a minWidth(0) or minHeight(undefined) or use aspect(undefined) to control the
+       height and width. (file://C:/Users/abham/OneDrive/Desktop/desktop/ML/QuantForge AI/frontend/.next/dev/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477:13)
+[browser] The width(0) and height(0) of chart should be greater than 0,
+       please check the style of container, or the props width(100%) and height(100%),
+       or add a minWidth(0) or minHeight(undefined) or use aspect(undefined) to control the
+       height and width. (file://C:/Users/abham/OneDrive/Desktop/desktop/ML/QuantForge AI/frontend/.next/dev/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477:13)
+[browser] The width(0) and height(0) of chart should be greater than 0,
+       please check the style of container, or the props width(100%) and height(100%),
+       or add a minWidth(0) or minHeight(undefined) or use aspect(undefined) to control the
+       height and width. (file://C:/Users/abham/OneDrive/Desktop/desktop/ML/QuantForge AI/frontend/.next/dev/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477:13)
+[browser] The width(0) and height(0) of chart should be greater than 0,
+       please check the style of container, or the props width(100%) and height(100%),
+       or add a minWidth(0) or minHeight(undefined) or use aspect(undefined) to control the
+       height and width. (file://C:/Users/abham/OneDrive/Desktop/desktop/ML/QuantForge AI/frontend/.next/dev/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477:13)
+[browser] The width(0) and height(0) of chart should be greater than 0,
+       please check the style of container, or the props width(100%) and height(100%),
+       or add a minWidth(0) or minHeight(undefined) or use aspect(undefined) to control the
+       height and width. (file://C:/Users/abham/OneDrive/Desktop/desktop/ML/QuantForge AI/frontend/.next/dev/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477:13)
+[browser] The width(0) and height(0) of chart should be greater than 0,
+       please check the style of container, or the props width(100%) and height(100%),
+       or add a minWidth(0) or minHeight(undefined) or use aspect(undefined) to control the
+       height and width. (file://C:/Users/abham/OneDrive/Desktop/desktop/ML/QuantForge AI/frontend/.next/dev/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477:13)
+Failed to proxy http://127.0.0.1:8000/api/signals/backtest?symbol=SENSEX&strategy=AI_Probability Error: socket hang up
+    at ignore-listed frames {
+  code: 'ECONNRESET'
+}
+Error: socket hang up
+    at ignore-listed frames {
+  code: 'ECONNRESET'
+}
+Failed to proxy http://127.0.0.1:8000/api/signals/backtest?symbol=BANKNIFTY&strategy=AI_Probability Error: socket hang up
+    at ignore-listed frames {
+  code: 'ECONNRESET'
+}
+Error: socket hang up
+    at ignore-listed frames {
+  code: 'ECONNRESET'
+}
+⨯ ./app/page.tsx:555:24
+Unexpected token. Did you mean `{'>'}` or `&gt;`?
+  [90m553 |[0m                   {vixVal > [35m18.0[0m ? [32m"High Vol"[0m : [32m"Stable"[0m}
+  [90m554 |[0m                 </span>
+[31m[1m>[0m [90m555 |[0m               </div>div>
+  [90m    |[0m                        [31m[1m^[0m
+  [90m556 |[0m
+  [90m557 |[0m               {[90m/* PCR Open Interest Card */[0m}
+  [90m558 |[0m               <div className=[32m"bg-white border border-slate-200 p-4 rounded-xl relative ov...[0m
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/page.tsx [Client Component Browser]
+    ./app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/page.tsx [Client Component SSR]
+    ./app/page.tsx [Server Component]
+
+
+⨯ ./app/page.tsx:555:24
+Unexpected token. Did you mean `{'>'}` or `&gt;`?
+  [90m553 |[0m                   {vixVal > [35m18.0[0m ? [32m"High Vol"[0m : [32m"Stable"[0m}
+  [90m554 |[0m                 </span>
+[31m[1m>[0m [90m555 |[0m               </div>div>
+  [90m    |[0m                        [31m[1m^[0m
+  [90m556 |[0m
+  [90m557 |[0m               {[90m/* PCR Open Interest Card */[0m}
+  [90m558 |[0m               <div className=[32m"bg-white border border-slate-200 p-4 rounded-xl relative ov...[0m
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/page.tsx [Client Component Browser]
+    ./app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/page.tsx [Client Component SSR]
+    ./app/page.tsx [Server Component]
+
+
+[browser] ./app/page.tsx:555:24
+Unexpected token. Did you mean `{'>'}` or `&gt;`?
+  553 |                   {vixVal > 18.0 ? "High Vol" : "Stable"}
+  554 |                 </span>
+> 555 |               </div>div>
+      |                        ^
+  556 |
+  557 |               {/* PCR Open Interest Card */}
+  558 |               <div className="bg-white border border-slate-200 p-4 rounded-xl relative ov...
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/page.tsx [Client Component Browser]
+    ./app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/page.tsx [Client Component SSR]
+    ./app/page.tsx [Server Component] 
+    at handleErrors (file://C:/Users/abham/OneDrive/Desktop/desktop/ML/QuantForge AI/frontend/.next/dev/static/chunks/node_modules_next_dist_client_0r5nbpw._.js:13951:21)
+    at processMessage (file://C:/Users/abham/OneDrive/Desktop/desktop/ML/QuantForge AI/frontend/.next/dev/static/chunks/node_modules_next_dist_client_0r5nbpw._.js:14014:21)
+    at WebSocket.handleMessage (file://C:/Users/abham/OneDrive/Desktop/desktop/ML/QuantForge AI/frontend/.next/dev/static/chunks/node_modules_next_dist_client_0r5nbpw._.js:13458:52) (file://C:/Users/abham/OneDrive/Desktop/desktop/ML/QuantForge AI/frontend/.next/dev/static/chunks/node_modules_next_dist_client_0r5nbpw._.js:13951:21)
+[browser] ./app/page.tsx:555:24
+Unexpected token. Did you mean `{'>'}` or `&gt;`?
+  553 |                   {vixVal > 18.0 ? "High Vol" : "Stable"}
+  554 |                 </span>
+> 555 |               </div>div>
+      |                        ^
+  556 |
+  557 |               {/* PCR Open Interest Card */}
+  558 |               <div className="bg-white border border-slate-200 p-4 rounded-xl relative ov...
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/page.tsx [Client Component Browser]
+    ./app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/page.tsx [Client Component SSR]
+    ./app/page.tsx [Server Component] 
+    at handleErrors (file://C:/Users/abham/OneDrive/Desktop/desktop/ML/QuantForge AI/frontend/.next/dev/static/chunks/node_modules_next_dist_client_0r5nbpw._.js:13951:21)
+    at processMessage (file://C:/Users/abham/OneDrive/Desktop/desktop/ML/QuantForge AI/frontend/.next/dev/static/chunks/node_modules_next_dist_client_0r5nbpw._.js:14014:21)
+    at WebSocket.handleMessage (file://C:/Users/abham/OneDrive/Desktop/desktop/ML/QuantForge AI/frontend/.next/dev/static/chunks/node_modules_next_dist_client_0r5nbpw._.js:13458:52) (file://C:/Users/abham/OneDrive/Desktop/desktop/ML/QuantForge AI/frontend/.next/dev/static/chunks/node_modules_next_dist_client_0r5nbpw._.js:13951:21)
+[browser] ./app/page.tsx:555:24
+Unexpected token. Did you mean `{'>'}` or `&gt;`?
+  553 |                   {vixVal > 18.0 ? "High Vol" : "Stable"}
+  554 |                 </span>
+> 555 |               </div>div>
+      |                        ^
+  556 |
+  557 |               {/* PCR Open Interest Card */}
+  558 |               <div className="bg-white border border-slate-200 p-4 rounded-xl relative ov...
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/page.tsx [Client Component Browser]
+    ./app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/page.tsx [Client Component SSR]
+    ./app/page.tsx [Server Component] 
+    at handleErrors (file://C:/Users/abham/OneDrive/Desktop/desktop/ML/QuantForge AI/frontend/.next/dev/static/chunks/node_modules_next_dist_client_0r5nbpw._.js:13951:21)
+    at processMessage (file://C:/Users/abham/OneDrive/Desktop/desktop/ML/QuantForge AI/frontend/.next/dev/static/chunks/node_modules_next_dist_client_0r5nbpw._.js:14014:21)
+    at WebSocket.handleMessage (file://C:/Users/abham/OneDrive/Desktop/desktop/ML/QuantForge AI/frontend/.next/dev/static/chunks/node_modules_next_dist_client_0r5nbpw._.js:13458:52) (file://C:/Users/abham/OneDrive/Desktop/desktop/ML/QuantForge AI/frontend/.next/dev/static/chunks/node_modules_next_dist_client_0r5nbpw._.js:13951:21)
+[browser] ./app/page.tsx:555:24
+Unexpected token. Did you mean `{'>'}` or `&gt;`?
+  553 |                   {vixVal > 18.0 ? "High Vol" : "Stable"}
+  554 |                 </span>
+> 555 |               </div>div>
+      |                        ^
+  556 |
+  557 |               {/* PCR Open Interest Card */}
+  558 |               <div className="bg-white border border-slate-200 p-4 rounded-xl relative ov...
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/page.tsx [Client Component Browser]
+    ./app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/page.tsx [Client Component SSR]
+    ./app/page.tsx [Server Component] 
+    at handleErrors (file://C:/Users/abham/OneDrive/Desktop/desktop/ML/QuantForge AI/frontend/.next/dev/static/chunks/node_modules_next_dist_client_0r5nbpw._.js:13951:21)
+    at processMessage (file://C:/Users/abham/OneDrive/Desktop/desktop/ML/QuantForge AI/frontend/.next/dev/static/chunks/node_modules_next_dist_client_0r5nbpw._.js:14014:21)
+    at WebSocket.handleMessage (file://C:/Users/abham/OneDrive/Desktop/desktop/ML/QuantForge AI/frontend/.next/dev/static/chunks/node_modules_next_dist_client_0r5nbpw._.js:13458:52) (file://C:/Users/abham/OneDrive/Desktop/desktop/ML/QuantForge AI/frontend/.next/dev/static/chunks/node_modules_next_dist_client_0r5nbpw._.js:13951:21)
+[browser] ./app/page.tsx:555:24
+Unexpected token. Did you mean `{'>'}` or `&gt;`?
+  553 |                   {vixVal > 18.0 ? "High Vol" : "Stable"}
+  554 |                 </span>
+> 555 |               </div>div>
+      |                        ^
+  556 |
+  557 |               {/* PCR Open Interest Card */}
+  558 |               <div className="bg-white border border-slate-200 p-4 rounded-xl relative ov...
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/page.tsx [Client Component Browser]
+    ./app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/page.tsx [Client Component SSR]
+    ./app/page.tsx [Server Component] 
+    at handleErrors (file://C:/Users/abham/OneDrive/Desktop/desktop/ML/QuantForge AI/frontend/.next/dev/static/chunks/node_modules_next_dist_client_0r5nbpw._.js:13951:21)
+    at processMessage (file://C:/Users/abham/OneDrive/Desktop/desktop/ML/QuantForge AI/frontend/.next/dev/static/chunks/node_modules_next_dist_client_0r5nbpw._.js:14014:21)
+    at WebSocket.handleMessage (file://C:/Users/abham/OneDrive/Desktop/desktop/ML/QuantForge AI/frontend/.next/dev/static/chunks/node_modules_next_dist_client_0r5nbpw._.js:13458:52) (file://C:/Users/abham/OneDrive/Desktop/desktop/ML/QuantForge AI/frontend/.next/dev/static/chunks/node_modules_next_dist_client_0r5nbpw._.js:13951:21)
+⨯ ./app/page.tsx:555:24
+Unexpected token. Did you mean `{'>'}` or `&gt;`?
+  [90m553 |[0m                   {vixVal > [35m18.0[0m ? [32m"High Vol"[0m : [32m"Stable"[0m}
+  [90m554 |[0m                 </span>
+[31m[1m>[0m [90m555 |[0m               </div>div>
+  [90m    |[0m                        [31m[1m^[0m
+  [90m556 |[0m
+  [90m557 |[0m               {[90m/* PCR Open Interest Card */[0m}
+  [90m558 |[0m               <div className=[32m"bg-white border border-slate-200 p-4 rounded-xl relative ov...[0m
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/page.tsx [Client Component Browser]
+    ./app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/page.tsx [Client Component SSR]
+    ./app/page.tsx [Server Component]
+
+
+⨯ ./app/page.tsx:555:24
+Unexpected token. Did you mean `{'>'}` or `&gt;`?
+  [90m553 |[0m                   {vixVal > [35m18.0[0m ? [32m"High Vol"[0m : [32m"Stable"[0m}
+  [90m554 |[0m                 </span>
+[31m[1m>[0m [90m555 |[0m               </div>div>
+  [90m    |[0m                        [31m[1m^[0m
+  [90m556 |[0m
+  [90m557 |[0m               {[90m/* PCR Open Interest Card */[0m}
+  [90m558 |[0m               <div className=[32m"bg-white border border-slate-200 p-4 rounded-xl relative ov...[0m
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/page.tsx [Client Component Browser]
+    ./app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/page.tsx [Client Component SSR]
+    ./app/page.tsx [Server Component]
+
+
+⨯ ./app/page.tsx:555:24
+Unexpected token. Did you mean `{'>'}` or `&gt;`?
+  [90m553 |[0m                   {vixVal > [35m18.0[0m ? [32m"High Vol"[0m : [32m"Stable"[0m}
+  [90m554 |[0m                 </span>
+[31m[1m>[0m [90m555 |[0m               </div>div>
+  [90m    |[0m                        [31m[1m^[0m
+  [90m556 |[0m
+  [90m557 |[0m               {[90m/* PCR Open Interest Card */[0m}
+  [90m558 |[0m               <div className=[32m"bg-white border border-slate-200 p-4 rounded-xl relative ov...[0m
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/page.tsx [Client Component Browser]
+    ./app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/page.tsx [Client Component SSR]
+    ./app/page.tsx [Server Component]
+
+
+⨯ ./app/page.tsx:555:24
+Unexpected token. Did you mean `{'>'}` or `&gt;`?
+  [90m553 |[0m                   {vixVal > [35m18.0[0m ? [32m"High Vol"[0m : [32m"Stable"[0m}
+  [90m554 |[0m                 </span>
+[31m[1m>[0m [90m555 |[0m               </div>div>
+  [90m    |[0m                        [31m[1m^[0m
+  [90m556 |[0m
+  [90m557 |[0m               {[90m/* PCR Open Interest Card */[0m}
+  [90m558 |[0m               <div className=[32m"bg-white border border-slate-200 p-4 rounded-xl relative ov...[0m
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/page.tsx [Client Component Browser]
+    ./app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/page.tsx [Client Component SSR]
+    ./app/page.tsx [Server Component]
+
+
+[browser] ./app/page.tsx:555:24
+Unexpected token. Did you mean `{'>'}` or `&gt;`?
+  553 |                   {vixVal > 18.0 ? "High Vol" : "Stable"}
+  554 |                 </span>
+> 555 |               </div>div>
+      |                        ^
+  556 |
+  557 |               {/* PCR Open Interest Card */}
+  558 |               <div className="bg-white border border-slate-200 p-4 rounded-xl relative ov...
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/page.tsx [Client Component Browser]
+    ./app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/page.tsx [Client Component SSR]
+    ./app/page.tsx [Server Component] 
+    at handleErrors (file://C:/Users/abham/OneDrive/Desktop/desktop/ML/QuantForge AI/frontend/.next/dev/static/chunks/node_modules_next_dist_client_0r5nbpw._.js:13951:21)
+    at processMessage (file://C:/Users/abham/OneDrive/Desktop/desktop/ML/QuantForge AI/frontend/.next/dev/static/chunks/node_modules_next_dist_client_0r5nbpw._.js:14014:21)
+    at WebSocket.handleMessage (file://C:/Users/abham/OneDrive/Desktop/desktop/ML/QuantForge AI/frontend/.next/dev/static/chunks/node_modules_next_dist_client_0r5nbpw._.js:13458:52) (file://C:/Users/abham/OneDrive/Desktop/desktop/ML/QuantForge AI/frontend/.next/dev/static/chunks/node_modules_next_dist_client_0r5nbpw._.js:13951:21)
+⨯ ./app/page.tsx:555:24
+Unexpected token. Did you mean `{'>'}` or `&gt;`?
+  [90m553 |[0m                   {vixVal > [35m18.0[0m ? [32m"High Vol"[0m : [32m"Stable"[0m}
+  [90m554 |[0m                 </span>
+[31m[1m>[0m [90m555 |[0m               </div>div>
+  [90m    |[0m                        [31m[1m^[0m
+  [90m556 |[0m
+  [90m557 |[0m               {[90m/* PCR Open Interest Card */[0m}
+  [90m558 |[0m               <div className=[32m"bg-white border border-slate-200 p-4 rounded-xl relative ov...[0m
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/page.tsx [Client Component Browser]
+    ./app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/page.tsx [Client Component SSR]
+    ./app/page.tsx [Server Component]
+
+
+⨯ ./app/page.tsx:555:24
+Unexpected token. Did you mean `{'>'}` or `&gt;`?
+  [90m553 |[0m                   {vixVal > [35m18.0[0m ? [32m"High Vol"[0m : [32m"Stable"[0m}
+  [90m554 |[0m                 </span>
+[31m[1m>[0m [90m555 |[0m               </div>div>
+  [90m    |[0m                        [31m[1m^[0m
+  [90m556 |[0m
+  [90m557 |[0m               {[90m/* PCR Open Interest Card */[0m}
+  [90m558 |[0m               <div className=[32m"bg-white border border-slate-200 p-4 rounded-xl relative ov...[0m
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/page.tsx [Client Component Browser]
+    ./app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/page.tsx [Client Component SSR]
+    ./app/page.tsx [Server Component]
+
+
+[browser] ./app/page.tsx:555:24
+Unexpected token. Did you mean `{'>'}` or `&gt;`?
+  553 |                   {vixVal > 18.0 ? "High Vol" : "Stable"}
+  554 |                 </span>
+> 555 |               </div>div>
+      |                        ^
+  556 |
+  557 |               {/* PCR Open Interest Card */}
+  558 |               <div className="bg-white border border-slate-200 p-4 rounded-xl relative ov...
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/page.tsx [Client Component Browser]
+    ./app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/page.tsx [Client Component SSR]
+    ./app/page.tsx [Server Component] 
+    at handleErrors (file://C:/Users/abham/OneDrive/Desktop/desktop/ML/QuantForge AI/frontend/.next/dev/static/chunks/node_modules_next_dist_client_0r5nbpw._.js:13951:21)
+    at processMessage (file://C:/Users/abham/OneDrive/Desktop/desktop/ML/QuantForge AI/frontend/.next/dev/static/chunks/node_modules_next_dist_client_0r5nbpw._.js:14014:21)
+    at WebSocket.handleMessage (file://C:/Users/abham/OneDrive/Desktop/desktop/ML/QuantForge AI/frontend/.next/dev/static/chunks/node_modules_next_dist_client_0r5nbpw._.js:13458:52) (file://C:/Users/abham/OneDrive/Desktop/desktop/ML/QuantForge AI/frontend/.next/dev/static/chunks/node_modules_next_dist_client_0r5nbpw._.js:13951:21)
+[browser] Uncaught Error: ./app/page.tsx:555:24
+Unexpected token. Did you mean `{'>'}` or `&gt;`?
+  553 |                   {vixVal > 18.0 ? "High Vol" : "Stable"}
+  554 |                 </span>
+> 555 |               </div>div>
+      |                        ^
+  556 |
+  557 |               {/* PCR Open Interest Card */}
+  558 |               <div className="bg-white border border-slate-200 p-4 rounded-xl relative ov...
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/page.tsx [Client Component Browser]
+    ./app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/page.tsx [Client Component SSR]
+    ./app/page.tsx [Server Component]
+
+
+    at <unknown> (Error: ./app/page.tsx:555:24)
+    at <unknown> (Error: (./app/page.tsx:555:24)
+[browser] Uncaught Error: ./app/page.tsx:555:24
+Unexpected token. Did you mean `{'>'}` or `&gt;`?
+  553 |                   {vixVal > 18.0 ? "High Vol" : "Stable"}
+  554 |                 </span>
+> 555 |               </div>div>
+      |                        ^
+  556 |
+  557 |               {/* PCR Open Interest Card */}
+  558 |               <div className="bg-white border border-slate-200 p-4 rounded-xl relative ov...
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/page.tsx [Client Component Browser]
+    ./app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/page.tsx [Client Component SSR]
+    ./app/page.tsx [Server Component]
+
+
+    at <unknown> (Error: ./app/page.tsx:555:24)
+    at <unknown> (Error: (./app/page.tsx:555:24)
+[browser] ./app/page.tsx:555:24
+Unexpected token. Did you mean `{'>'}` or `&gt;`?
+  553 |                   {vixVal > 18.0 ? "High Vol" : "Stable"}
+  554 |                 </span>
+> 555 |               </div>div>
+      |                        ^
+  556 |
+  557 |               {/* PCR Open Interest Card */}
+  558 |               <div className="bg-white border border-slate-200 p-4 rounded-xl relative ov...
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/page.tsx [Client Component Browser]
+    ./app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/page.tsx [Client Component SSR]
+    ./app/page.tsx [Server Component] 
+    at handleErrors (file://C:/Users/abham/OneDrive/Desktop/desktop/ML/QuantForge AI/frontend/.next/dev/static/chunks/node_modules_next_dist_client_16lnmlo._.js:2774:21)
+    at processMessage (file://C:/Users/abham/OneDrive/Desktop/desktop/ML/QuantForge AI/frontend/.next/dev/static/chunks/node_modules_next_dist_client_16lnmlo._.js:2835:28)
+    at <unknown> (file://C:/Users/abham/OneDrive/Desktop/desktop/ML/QuantForge AI/frontend/.next/dev/static/chunks/node_modules_next_dist_client_16lnmlo._.js:2680:13)
+    at WebSocket.handleMessage (file://C:/Users/abham/OneDrive/Desktop/desktop/ML/QuantForge AI/frontend/.next/dev/static/chunks/node_modules_next_dist_client_16lnmlo._.js:2325:17) (file://C:/Users/abham/OneDrive/Desktop/desktop/ML/QuantForge AI/frontend/.next/dev/static/chunks/node_modules_next_dist_client_16lnmlo._.js:2774:21)
+[browser] ./app/page.tsx:555:24
+Unexpected token. Did you mean `{'>'}` or `&gt;`?
+  553 |                   {vixVal > 18.0 ? "High Vol" : "Stable"}
+  554 |                 </span>
+> 555 |               </div>div>
+      |                        ^
+  556 |
+  557 |               {/* PCR Open Interest Card */}
+  558 |               <div className="bg-white border border-slate-200 p-4 rounded-xl relative ov...
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/page.tsx [Client Component Browser]
+    ./app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/page.tsx [Client Component SSR]
+    ./app/page.tsx [Server Component] 
+    at handleErrors (file://C:/Users/abham/OneDrive/Desktop/desktop/ML/QuantForge AI/frontend/.next/dev/static/chunks/node_modules_next_dist_client_16lnmlo._.js:2774:21)
+    at processMessage (file://C:/Users/abham/OneDrive/Desktop/desktop/ML/QuantForge AI/frontend/.next/dev/static/chunks/node_modules_next_dist_client_16lnmlo._.js:2835:28)
+    at <unknown> (file://C:/Users/abham/OneDrive/Desktop/desktop/ML/QuantForge AI/frontend/.next/dev/static/chunks/node_modules_next_dist_client_16lnmlo._.js:2680:13)
+    at WebSocket.handleMessage (file://C:/Users/abham/OneDrive/Desktop/desktop/ML/QuantForge AI/frontend/.next/dev/static/chunks/node_modules_next_dist_client_16lnmlo._.js:2325:17) (file://C:/Users/abham/OneDrive/Desktop/desktop/ML/QuantForge AI/frontend/.next/dev/static/chunks/node_modules_next_dist_client_16lnmlo._.js:2774:21)
+[browser] ./app/page.tsx:555:24
+Unexpected token. Did you mean `{'>'}` or `&gt;`?
+  553 |                   {vixVal > 18.0 ? "High Vol" : "Stable"}
+  554 |                 </span>
+> 555 |               </div>div>
+      |                        ^
+  556 |
+  557 |               {/* PCR Open Interest Card */}
+  558 |               <div className="bg-white border border-slate-200 p-4 rounded-xl relative ov...
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/page.tsx [Client Component Browser]
+    ./app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/page.tsx [Client Component SSR]
+    ./app/page.tsx [Server Component] 
+    at handleErrors (file://C:/Users/abham/OneDrive/Desktop/desktop/ML/QuantForge AI/frontend/.next/dev/static/chunks/node_modules_next_dist_client_16lnmlo._.js:2774:21)
+    at processMessage (file://C:/Users/abham/OneDrive/Desktop/desktop/ML/QuantForge AI/frontend/.next/dev/static/chunks/node_modules_next_dist_client_16lnmlo._.js:2835:28)
+    at <unknown> (file://C:/Users/abham/OneDrive/Desktop/desktop/ML/QuantForge AI/frontend/.next/dev/static/chunks/node_modules_next_dist_client_16lnmlo._.js:2680:13)
+    at WebSocket.handleMessage (file://C:/Users/abham/OneDrive/Desktop/desktop/ML/QuantForge AI/frontend/.next/dev/static/chunks/node_modules_next_dist_client_16lnmlo._.js:2325:17) (file://C:/Users/abham/OneDrive/Desktop/desktop/ML/QuantForge AI/frontend/.next/dev/static/chunks/node_modules_next_dist_client_16lnmlo._.js:2774:21)
+[browser] ./app/page.tsx:555:24
+Unexpected token. Did you mean `{'>'}` or `&gt;`?
+  553 |                   {vixVal > 18.0 ? "High Vol" : "Stable"}
+  554 |                 </span>
+> 555 |               </div>div>
+      |                        ^
+  556 |
+  557 |               {/* PCR Open Interest Card */}
+  558 |               <div className="bg-white border border-slate-200 p-4 rounded-xl relative ov...
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/page.tsx [Client Component Browser]
+    ./app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/page.tsx [Client Component SSR]
+    ./app/page.tsx [Server Component] 
+    at handleErrors (file://C:/Users/abham/OneDrive/Desktop/desktop/ML/QuantForge AI/frontend/.next/dev/static/chunks/node_modules_next_dist_client_16lnmlo._.js:2774:21)
+    at processMessage (file://C:/Users/abham/OneDrive/Desktop/desktop/ML/QuantForge AI/frontend/.next/dev/static/chunks/node_modules_next_dist_client_16lnmlo._.js:2835:28)
+    at <unknown> (file://C:/Users/abham/OneDrive/Desktop/desktop/ML/QuantForge AI/frontend/.next/dev/static/chunks/node_modules_next_dist_client_16lnmlo._.js:2680:13)
+    at WebSocket.handleMessage (file://C:/Users/abham/OneDrive/Desktop/desktop/ML/QuantForge AI/frontend/.next/dev/static/chunks/node_modules_next_dist_client_16lnmlo._.js:2325:17) (file://C:/Users/abham/OneDrive/Desktop/desktop/ML/QuantForge AI/frontend/.next/dev/static/chunks/node_modules_next_dist_client_16lnmlo._.js:2774:21)
+⨯ ./app/page.tsx:1207:6
+Unterminated regexp literal
+  [90m1205 |[0m         </main>
+  [90m1206 |[0m       </div>
+[31m[1m>[0m [90m1207 |[0m     </div>
+  [90m     |[0m      [31m[1m^^^^^[0m
+  [90m1208 |[0m   );
+  [90m1209 |[0m }
+  [90m1210 |[0m
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/page.tsx [Client Component Browser]
+    ./app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/page.tsx [Client Component SSR]
+    ./app/page.tsx [Server Component]
+
+
+⨯ ./app/page.tsx:1207:6
+Unterminated regexp literal
+  [90m1205 |[0m         </main>
+  [90m1206 |[0m       </div>
+[31m[1m>[0m [90m1207 |[0m     </div>
+  [90m     |[0m      [31m[1m^^^^^[0m
+  [90m1208 |[0m   );
+  [90m1209 |[0m }
+  [90m1210 |[0m
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/page.tsx [Client Component Browser]
+    ./app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/page.tsx [Client Component SSR]
+    ./app/page.tsx [Server Component]
+
+
+[browser] ./app/page.tsx:1207:6
+Unterminated regexp literal
+  1205 |         </main>
+  1206 |       </div>
+> 1207 |     </div>
+       |      ^^^^^
+  1208 |   );
+  1209 | }
+  1210 |
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/page.tsx [Client Component Browser]
+    ./app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/page.tsx [Client Component SSR]
+    ./app/page.tsx [Server Component] 
+    at handleErrors (file://C:/Users/abham/OneDrive/Desktop/desktop/ML/QuantForge AI/frontend/.next/dev/static/chunks/node_modules_next_dist_client_0r5nbpw._.js:13951:21)
+    at processMessage (file://C:/Users/abham/OneDrive/Desktop/desktop/ML/QuantForge AI/frontend/.next/dev/static/chunks/node_modules_next_dist_client_0r5nbpw._.js:14014:21)
+    at WebSocket.handleMessage (file://C:/Users/abham/OneDrive/Desktop/desktop/ML/QuantForge AI/frontend/.next/dev/static/chunks/node_modules_next_dist_client_0r5nbpw._.js:13458:52) (file://C:/Users/abham/OneDrive/Desktop/desktop/ML/QuantForge AI/frontend/.next/dev/static/chunks/node_modules_next_dist_client_0r5nbpw._.js:13951:21)
+[browser] ./app/page.tsx:1207:6
+Unterminated regexp literal
+  1205 |         </main>
+  1206 |       </div>
+> 1207 |     </div>
+       |      ^^^^^
+  1208 |   );
+  1209 | }
+  1210 |
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/page.tsx [Client Component Browser]
+    ./app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/page.tsx [Client Component SSR]
+    ./app/page.tsx [Server Component] 
+    at handleErrors (file://C:/Users/abham/OneDrive/Desktop/desktop/ML/QuantForge AI/frontend/.next/dev/static/chunks/node_modules_next_dist_client_0r5nbpw._.js:13951:21)
+    at processMessage (file://C:/Users/abham/OneDrive/Desktop/desktop/ML/QuantForge AI/frontend/.next/dev/static/chunks/node_modules_next_dist_client_0r5nbpw._.js:14014:21)
+    at WebSocket.handleMessage (file://C:/Users/abham/OneDrive/Desktop/desktop/ML/QuantForge AI/frontend/.next/dev/static/chunks/node_modules_next_dist_client_0r5nbpw._.js:13458:52) (file://C:/Users/abham/OneDrive/Desktop/desktop/ML/QuantForge AI/frontend/.next/dev/static/chunks/node_modules_next_dist_client_0r5nbpw._.js:13951:21)
+⨯ ./app/page.tsx:1207:6
+Unterminated regexp literal
+  [90m1205 |[0m         </main>
+  [90m1206 |[0m       </div>
+[31m[1m>[0m [90m1207 |[0m     </div>
+  [90m     |[0m      [31m[1m^^^^^[0m
+  [90m1208 |[0m   );
+  [90m1209 |[0m }
+  [90m1210 |[0m
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/page.tsx [Client Component Browser]
+    ./app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/page.tsx [Client Component SSR]
+    ./app/page.tsx [Server Component]
+
+
+⨯ ./app/page.tsx:1207:6
+Unterminated regexp literal
+  [90m1205 |[0m         </main>
+  [90m1206 |[0m       </div>
+[31m[1m>[0m [90m1207 |[0m     </div>
+  [90m     |[0m      [31m[1m^^^^^[0m
+  [90m1208 |[0m   );
+  [90m1209 |[0m }
+  [90m1210 |[0m
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/page.tsx [Client Component Browser]
+    ./app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/page.tsx [Client Component SSR]
+    ./app/page.tsx [Server Component]
+
+
+⨯ ./app/page.tsx:1207:6
+Unterminated regexp literal
+  [90m1205 |[0m         </main>
+  [90m1206 |[0m       </div>
+[31m[1m>[0m [90m1207 |[0m     </div>
+  [90m     |[0m      [31m[1m^^^^^[0m
+  [90m1208 |[0m   );
+  [90m1209 |[0m }
+  [90m1210 |[0m
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/page.tsx [Client Component Browser]
+    ./app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/page.tsx [Client Component SSR]
+    ./app/page.tsx [Server Component]
+
+
+⨯ ./app/page.tsx:1207:6
+Unterminated regexp literal
+  [90m1205 |[0m         </main>
+  [90m1206 |[0m       </div>
+[31m[1m>[0m [90m1207 |[0m     </div>
+  [90m     |[0m      [31m[1m^^^^^[0m
+  [90m1208 |[0m   );
+  [90m1209 |[0m }
+  [90m1210 |[0m
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/page.tsx [Client Component Browser]
+    ./app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/page.tsx [Client Component SSR]
+    ./app/page.tsx [Server Component]
+
+
+[browser] ./app/page.tsx:1207:6
+Unterminated regexp literal
+  1205 |         </main>
+  1206 |       </div>
+> 1207 |     </div>
+       |      ^^^^^
+  1208 |   );
+  1209 | }
+  1210 |
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/page.tsx [Client Component Browser]
+    ./app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/page.tsx [Client Component SSR]
+    ./app/page.tsx [Server Component] 
+    at handleErrors (file://C:/Users/abham/OneDrive/Desktop/desktop/ML/QuantForge AI/frontend/.next/dev/static/chunks/node_modules_next_dist_client_0r5nbpw._.js:13951:21)
+    at processMessage (file://C:/Users/abham/OneDrive/Desktop/desktop/ML/QuantForge AI/frontend/.next/dev/static/chunks/node_modules_next_dist_client_0r5nbpw._.js:14014:21)
+    at WebSocket.handleMessage (file://C:/Users/abham/OneDrive/Desktop/desktop/ML/QuantForge AI/frontend/.next/dev/static/chunks/node_modules_next_dist_client_0r5nbpw._.js:13458:52) (file://C:/Users/abham/OneDrive/Desktop/desktop/ML/QuantForge AI/frontend/.next/dev/static/chunks/node_modules_next_dist_client_0r5nbpw._.js:13951:21)
+⨯ ./app/page.tsx:1207:6
+Unterminated regexp literal
+  [90m1205 |[0m         </main>
+  [90m1206 |[0m       </div>
+[31m[1m>[0m [90m1207 |[0m     </div>
+  [90m     |[0m      [31m[1m^^^^^[0m
+  [90m1208 |[0m   );
+  [90m1209 |[0m }
+  [90m1210 |[0m
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/page.tsx [Client Component Browser]
+    ./app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/page.tsx [Client Component SSR]
+    ./app/page.tsx [Server Component]
+
+
+⨯ ./app/page.tsx:1207:6
+Unterminated regexp literal
+  [90m1205 |[0m         </main>
+  [90m1206 |[0m       </div>
+[31m[1m>[0m [90m1207 |[0m     </div>
+  [90m     |[0m      [31m[1m^^^^^[0m
+  [90m1208 |[0m   );
+  [90m1209 |[0m }
+  [90m1210 |[0m
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/page.tsx [Client Component Browser]
+    ./app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/page.tsx [Client Component SSR]
+    ./app/page.tsx [Server Component]
+
+
+[browser] ./app/page.tsx:1207:6
+Unterminated regexp literal
+  1205 |         </main>
+  1206 |       </div>
+> 1207 |     </div>
+       |      ^^^^^
+  1208 |   );
+  1209 | }
+  1210 |
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/page.tsx [Client Component Browser]
+    ./app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/page.tsx [Client Component SSR]
+    ./app/page.tsx [Server Component] 
+    at handleErrors (file://C:/Users/abham/OneDrive/Desktop/desktop/ML/QuantForge AI/frontend/.next/dev/static/chunks/node_modules_next_dist_client_0r5nbpw._.js:13951:21)
+    at processMessage (file://C:/Users/abham/OneDrive/Desktop/desktop/ML/QuantForge AI/frontend/.next/dev/static/chunks/node_modules_next_dist_client_0r5nbpw._.js:14014:21)
+    at WebSocket.handleMessage (file://C:/Users/abham/OneDrive/Desktop/desktop/ML/QuantForge AI/frontend/.next/dev/static/chunks/node_modules_next_dist_client_0r5nbpw._.js:13458:52) (file://C:/Users/abham/OneDrive/Desktop/desktop/ML/QuantForge AI/frontend/.next/dev/static/chunks/node_modules_next_dist_client_0r5nbpw._.js:13951:21)
+[browser] Uncaught Error: ./app/page.tsx:1207:6
+Unterminated regexp literal
+  1205 |         </main>
+  1206 |       </div>
+> 1207 |     </div>
+       |      ^^^^^
+  1208 |   );
+  1209 | }
+  1210 |
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/page.tsx [Client Component Browser]
+    ./app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/page.tsx [Client Component SSR]
+    ./app/page.tsx [Server Component]
+
+
+    at <unknown> (Error: ./app/page.tsx:1207:6)
+    at <unknown> (Error: (./app/page.tsx:1207:6)
+[browser] Uncaught Error: ./app/page.tsx:1207:6
+Unterminated regexp literal
+  1205 |         </main>
+  1206 |       </div>
+> 1207 |     </div>
+       |      ^^^^^
+  1208 |   );
+  1209 | }
+  1210 |
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/page.tsx [Client Component Browser]
+    ./app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/page.tsx [Client Component SSR]
+    ./app/page.tsx [Server Component]
+
+
+    at <unknown> (Error: ./app/page.tsx:1207:6)
+    at <unknown> (Error: (./app/page.tsx:1207:6)
+[browser] ./app/page.tsx:1207:6
+Unterminated regexp literal
+  1205 |         </main>
+  1206 |       </div>
+> 1207 |     </div>
+       |      ^^^^^
+  1208 |   );
+  1209 | }
+  1210 |
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/page.tsx [Client Component Browser]
+    ./app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/page.tsx [Client Component SSR]
+    ./app/page.tsx [Server Component] 
+    at handleErrors (file://C:/Users/abham/OneDrive/Desktop/desktop/ML/QuantForge AI/frontend/.next/dev/static/chunks/node_modules_next_dist_client_16lnmlo._.js:2774:21)
+    at processMessage (file://C:/Users/abham/OneDrive/Desktop/desktop/ML/QuantForge AI/frontend/.next/dev/static/chunks/node_modules_next_dist_client_16lnmlo._.js:2835:28)
+    at <unknown> (file://C:/Users/abham/OneDrive/Desktop/desktop/ML/QuantForge AI/frontend/.next/dev/static/chunks/node_modules_next_dist_client_16lnmlo._.js:2680:13)
+    at WebSocket.handleMessage (file://C:/Users/abham/OneDrive/Desktop/desktop/ML/QuantForge AI/frontend/.next/dev/static/chunks/node_modules_next_dist_client_16lnmlo._.js:2325:17) (file://C:/Users/abham/OneDrive/Desktop/desktop/ML/QuantForge AI/frontend/.next/dev/static/chunks/node_modules_next_dist_client_16lnmlo._.js:2774:21)
+[browser] ./app/page.tsx:1207:6
+Unterminated regexp literal
+  1205 |         </main>
+  1206 |       </div>
+> 1207 |     </div>
+       |      ^^^^^
+  1208 |   );
+  1209 | }
+  1210 |
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/page.tsx [Client Component Browser]
+    ./app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/page.tsx [Client Component SSR]
+    ./app/page.tsx [Server Component] 
+    at handleErrors (file://C:/Users/abham/OneDrive/Desktop/desktop/ML/QuantForge AI/frontend/.next/dev/static/chunks/node_modules_next_dist_client_16lnmlo._.js:2774:21)
+    at processMessage (file://C:/Users/abham/OneDrive/Desktop/desktop/ML/QuantForge AI/frontend/.next/dev/static/chunks/node_modules_next_dist_client_16lnmlo._.js:2835:28)
+    at <unknown> (file://C:/Users/abham/OneDrive/Desktop/desktop/ML/QuantForge AI/frontend/.next/dev/static/chunks/node_modules_next_dist_client_16lnmlo._.js:2680:13)
+    at WebSocket.handleMessage (file://C:/Users/abham/OneDrive/Desktop/desktop/ML/QuantForge AI/frontend/.next/dev/static/chunks/node_modules_next_dist_client_16lnmlo._.js:2325:17) (file://C:/Users/abham/OneDrive/Desktop/desktop/ML/QuantForge AI/frontend/.next/dev/static/chunks/node_modules_next_dist_client_16lnmlo._.js:2774:21)
+[browser] ./app/page.tsx:1207:6
+Unterminated regexp literal
+  1205 |         </main>
+  1206 |       </div>
+> 1207 |     </div>
+       |      ^^^^^
+  1208 |   );
+  1209 | }
+  1210 |
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/page.tsx [Client Component Browser]
+    ./app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/page.tsx [Client Component SSR]
+    ./app/page.tsx [Server Component] 
+    at handleErrors (file://C:/Users/abham/OneDrive/Desktop/desktop/ML/QuantForge AI/frontend/.next/dev/static/chunks/node_modules_next_dist_client_16lnmlo._.js:2774:21)
+    at processMessage (file://C:/Users/abham/OneDrive/Desktop/desktop/ML/QuantForge AI/frontend/.next/dev/static/chunks/node_modules_next_dist_client_16lnmlo._.js:2835:28)
+    at <unknown> (file://C:/Users/abham/OneDrive/Desktop/desktop/ML/QuantForge AI/frontend/.next/dev/static/chunks/node_modules_next_dist_client_16lnmlo._.js:2680:13)
+    at WebSocket.handleMessage (file://C:/Users/abham/OneDrive/Desktop/desktop/ML/QuantForge AI/frontend/.next/dev/static/chunks/node_modules_next_dist_client_16lnmlo._.js:2325:17) (file://C:/Users/abham/OneDrive/Desktop/desktop/ML/QuantForge AI/frontend/.next/dev/static/chunks/node_modules_next_dist_client_16lnmlo._.js:2774:21)
+⨯ ./app/page.tsx:442:7
+Expected '</', got '{'
+  [90m440 |[0m           </span>
+  [90m441 |[0m         </div>
+[31m[1m>[0m [90m442 |[0m       {[90m/* Main Terminal Area */[0m}
+  [90m    |[0m       [31m[1m^[0m
+  [90m443 |[0m       <div className=[32m"flex-1 flex flex-col lg:flex-row bg-slate-50/30"[0m>
+  [90m444 |[0m         {[90m/* Sidebar Tabs Panel (Reduced width and compact styles) */[0m}
+  [90m445 |[0m         <aside className=[32m"w-full lg:w-52 bg-white lg:border-r border-slate-200/80 p-3.5 f...[0m
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/page.tsx [Client Component Browser]
+    ./app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/page.tsx [Client Component SSR]
+    ./app/page.tsx [Server Component]
+
+
+[browser] ./app/page.tsx:442:7
+Expected '</', got '{'
+  440 |           </span>
+  441 |         </div>
+> 442 |       {/* Main Terminal Area */}
+      |       ^
+  443 |       <div className="flex-1 flex flex-col lg:flex-row bg-slate-50/30">
+  444 |         {/* Sidebar Tabs Panel (Reduced width and compact styles) */}
+  445 |         <aside className="w-full lg:w-52 bg-white lg:border-r border-slate-200/80 p-3.5 f...
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/page.tsx [Client Component Browser]
+    ./app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/page.tsx [Client Component SSR]
+    ./app/page.tsx [Server Component] 
+    at handleErrors (file://C:/Users/abham/OneDrive/Desktop/desktop/ML/QuantForge AI/frontend/.next/dev/static/chunks/node_modules_next_dist_client_16lnmlo._.js:2774:21)
+    at processMessage (file://C:/Users/abham/OneDrive/Desktop/desktop/ML/QuantForge AI/frontend/.next/dev/static/chunks/node_modules_next_dist_client_16lnmlo._.js:2835:28)
+    at <unknown> (file://C:/Users/abham/OneDrive/Desktop/desktop/ML/QuantForge AI/frontend/.next/dev/static/chunks/node_modules_next_dist_client_16lnmlo._.js:2680:13)
+    at WebSocket.handleMessage (file://C:/Users/abham/OneDrive/Desktop/desktop/ML/QuantForge AI/frontend/.next/dev/static/chunks/node_modules_next_dist_client_16lnmlo._.js:2325:17) (file://C:/Users/abham/OneDrive/Desktop/desktop/ML/QuantForge AI/frontend/.next/dev/static/chunks/node_modules_next_dist_client_16lnmlo._.js:2774:21)
+⨯ ./app/page.tsx:442:7
+Expected '</', got '{'
+  [90m440 |[0m           </span>
+  [90m441 |[0m         </div>
+[31m[1m>[0m [90m442 |[0m       {[90m/* Main Terminal Area */[0m}
+  [90m    |[0m       [31m[1m^[0m
+  [90m443 |[0m       <div className=[32m"flex-1 flex flex-col lg:flex-row bg-slate-50/30"[0m>
+  [90m444 |[0m         {[90m/* Sidebar Tabs Panel (Reduced width and compact styles) */[0m}
+  [90m445 |[0m         <aside className=[32m"w-full lg:w-52 bg-white lg:border-r border-slate-200/80 p-3.5 f...[0m
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/page.tsx [Client Component Browser]
+    ./app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/page.tsx [Client Component SSR]
+    ./app/page.tsx [Server Component]
+
+
+[browser] Uncaught Error: ./app/page.tsx:442:7
+Expected '</', got '{'
+  440 |           </span>
+  441 |         </div>
+> 442 |       {/* Main Terminal Area */}
+      |       ^
+  443 |       <div className="flex-1 flex flex-col lg:flex-row bg-slate-50/30">
+  444 |         {/* Sidebar Tabs Panel (Reduced width and compact styles) */}
+  445 |         <aside className="w-full lg:w-52 bg-white lg:border-r border-slate-200/80 p-3.5 f...
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/page.tsx [Client Component Browser]
+    ./app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/page.tsx [Client Component SSR]
+    ./app/page.tsx [Server Component]
+
+
+    at <unknown> (Error: ./app/page.tsx:442:7)
+    at <unknown> (Error: (./app/page.tsx:442:7)
+[browser] Uncaught Error: ./app/page.tsx:442:7
+Expected '</', got '{'
+  440 |           </span>
+  441 |         </div>
+> 442 |       {/* Main Terminal Area */}
+      |       ^
+  443 |       <div className="flex-1 flex flex-col lg:flex-row bg-slate-50/30">
+  444 |         {/* Sidebar Tabs Panel (Reduced width and compact styles) */}
+  445 |         <aside className="w-full lg:w-52 bg-white lg:border-r border-slate-200/80 p-3.5 f...
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/page.tsx [Client Component Browser]
+    ./app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/page.tsx [Client Component SSR]
+    ./app/page.tsx [Server Component]
+
+
+    at <unknown> (Error: ./app/page.tsx:442:7)
+    at <unknown> (Error: (./app/page.tsx:442:7)
+[browser] ./app/page.tsx:442:7
+Expected '</', got '{'
+  440 |           </span>
+  441 |         </div>
+> 442 |       {/* Main Terminal Area */}
+      |       ^
+  443 |       <div className="flex-1 flex flex-col lg:flex-row bg-slate-50/30">
+  444 |         {/* Sidebar Tabs Panel (Reduced width and compact styles) */}
+  445 |         <aside className="w-full lg:w-52 bg-white lg:border-r border-slate-200/80 p-3.5 f...
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/page.tsx [Client Component Browser]
+    ./app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/page.tsx [Client Component SSR]
+    ./app/page.tsx [Server Component] 
+    at handleErrors (file://C:/Users/abham/OneDrive/Desktop/desktop/ML/QuantForge AI/frontend/.next/dev/static/chunks/node_modules_next_dist_client_16lnmlo._.js:2774:21)
+    at processMessage (file://C:/Users/abham/OneDrive/Desktop/desktop/ML/QuantForge AI/frontend/.next/dev/static/chunks/node_modules_next_dist_client_16lnmlo._.js:2835:28)
+    at <unknown> (file://C:/Users/abham/OneDrive/Desktop/desktop/ML/QuantForge AI/frontend/.next/dev/static/chunks/node_modules_next_dist_client_16lnmlo._.js:2680:13)
+    at WebSocket.handleMessage (file://C:/Users/abham/OneDrive/Desktop/desktop/ML/QuantForge AI/frontend/.next/dev/static/chunks/node_modules_next_dist_client_16lnmlo._.js:2325:17) (file://C:/Users/abham/OneDrive/Desktop/desktop/ML/QuantForge AI/frontend/.next/dev/static/chunks/node_modules_next_dist_client_16lnmlo._.js:2774:21)
+[browser] ./app/page.tsx:442:7
+Expected '</', got '{'
+  440 |           </span>
+  441 |         </div>
+> 442 |       {/* Main Terminal Area */}
+      |       ^
+  443 |       <div className="flex-1 flex flex-col lg:flex-row bg-slate-50/30">
+  444 |         {/* Sidebar Tabs Panel (Reduced width and compact styles) */}
+  445 |         <aside className="w-full lg:w-52 bg-white lg:border-r border-slate-200/80 p-3.5 f...
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/page.tsx [Client Component Browser]
+    ./app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/page.tsx [Client Component SSR]
+    ./app/page.tsx [Server Component] 
+    at handleErrors (file://C:/Users/abham/OneDrive/Desktop/desktop/ML/QuantForge AI/frontend/.next/dev/static/chunks/node_modules_next_dist_client_16lnmlo._.js:2774:21)
+    at processMessage (file://C:/Users/abham/OneDrive/Desktop/desktop/ML/QuantForge AI/frontend/.next/dev/static/chunks/node_modules_next_dist_client_16lnmlo._.js:2835:28)
+    at <unknown> (file://C:/Users/abham/OneDrive/Desktop/desktop/ML/QuantForge AI/frontend/.next/dev/static/chunks/node_modules_next_dist_client_16lnmlo._.js:2680:13)
+    at WebSocket.handleMessage (file://C:/Users/abham/OneDrive/Desktop/desktop/ML/QuantForge AI/frontend/.next/dev/static/chunks/node_modules_next_dist_client_16lnmlo._.js:2325:17) (file://C:/Users/abham/OneDrive/Desktop/desktop/ML/QuantForge AI/frontend/.next/dev/static/chunks/node_modules_next_dist_client_16lnmlo._.js:2774:21)
+[browser] Uncaught Error: Objects are not valid as a React child (found: object with keys {name, description, range}). If you meant to render a collection of children, use an array instead.
+    at throwOnInvalidObjectTypeImpl (file://C:/Users/abham/OneDrive/Desktop/desktop/ML/QuantForge AI/frontend/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:3922:15)
+    at throwOnInvalidObjectType (file://C:/Users/abham/OneDrive/Desktop/desktop/ML/QuantForge AI/frontend/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:3926:110)
+    at reconcileChildFibersImpl (file://C:/Users/abham/OneDrive/Desktop/desktop/ML/QuantForge AI/frontend/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:4249:17)
+    at <unknown> (file://C:/Users/abham/OneDrive/Desktop/desktop/ML/QuantForge AI/frontend/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:4261:39)
+    at reconcileChildren (file://C:/Users/abham/OneDrive/Desktop/desktop/ML/QuantForge AI/frontend/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:5898:119)
+    at beginWork (file://C:/Users/abham/OneDrive/Desktop/desktop/ML/QuantForge AI/frontend/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:6758:1573)
+    at runWithFiberInDEV (file://C:/Users/abham/OneDrive/Desktop/desktop/ML/QuantForge AI/frontend/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:965:74)
+    at performUnitOfWork (file://C:/Users/abham/OneDrive/Desktop/desktop/ML/QuantForge AI/frontend/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:9555:97)
+    at workLoopSync (file://C:/Users/abham/OneDrive/Desktop/desktop/ML/QuantForge AI/frontend/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:9449:40)
+    at renderRootSync (file://C:/Users/abham/OneDrive/Desktop/desktop/ML/QuantForge AI/frontend/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:9433:13)
+    at performWorkOnRoot (file://C:/Users/abham/OneDrive/Desktop/desktop/ML/QuantForge AI/frontend/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:9061:186)
+    at performSyncWorkOnRoot (file://C:/Users/abham/OneDrive/Desktop/desktop/ML/QuantForge AI/frontend/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:10263:9)
+    at flushSyncWorkAcrossRoots_impl (file://C:/Users/abham/OneDrive/Desktop/desktop/ML/QuantForge AI/frontend/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:10179:316)
+    at processRootScheduleInMicrotask (file://C:/Users/abham/OneDrive/Desktop/desktop/ML/QuantForge AI/frontend/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:10200:106)
+    at <unknown> (file://C:/Users/abham/OneDrive/Desktop/desktop/ML/QuantForge AI/frontend/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:10274:158)
+    at ClientPageRoot (file://C:/Users/abham/OneDrive/Desktop/desktop/ML/QuantForge AI/frontend/.next/dev/static/chunks/node_modules_next_dist_1e9_p6y._.js:4461:50)
+⚠ Fast Refresh had to perform a full reload due to a runtime error.
+⚠ Fast Refresh had to perform a full reload due to a runtime error.
+Failed to proxy http://127.0.0.1:8000/api/analytics/maxpain?symbol=NIFTY Error: socket hang up
+    at ignore-listed frames {
+  code: 'ECONNRESET'
+}
+Error: socket hang up
+    at ignore-listed frames {
+  code: 'ECONNRESET'
+}
+Failed to proxy http://127.0.0.1:8000/api/analytics/oi?symbol=NIFTY Error: socket hang up
+    at ignore-listed frames {
+  code: 'ECONNRESET'
+}
+Error: socket hang up
+    at ignore-listed frames {
+  code: 'ECONNRESET'
+}
+Failed to proxy http://127.0.0.1:8000/api/market/option-chain?symbol=NIFTY Error: socket hang up
+    at ignore-listed frames {
+  code: 'ECONNRESET'
+}
+Error: socket hang up
+    at ignore-listed frames {
+  code: 'ECONNRESET'
+}
+Failed to proxy http://127.0.0.1:8000/api/market/vix Error: socket hang up
+    at ignore-listed frames {
+  code: 'ECONNRESET'
+}
+Error: socket hang up
+    at ignore-listed frames {
+  code: 'ECONNRESET'
+}
+Failed to proxy http://127.0.0.1:8000/api/market/futures?symbol=NIFTY Error: socket hang up
+    at ignore-listed frames {
+  code: 'ECONNRESET'
+}
+Error: socket hang up
+    at ignore-listed frames {
+  code: 'ECONNRESET'
+}
+Failed to proxy http://127.0.0.1:8000/api/market/spot?symbol=NIFTY Error: socket hang up
+    at ignore-listed frames {
+  code: 'ECONNRESET'
+}
+Error: socket hang up
+    at ignore-listed frames {
+  code: 'ECONNRESET'
+}
+[browser] Uncaught ReferenceError: BarChart2 is not defined
+    at Dashboard (file://C:/Users/abham/OneDrive/Desktop/desktop/ML/QuantForge AI/frontend/.next/dev/static/chunks/app_page_tsx_1s_43kl._.js?id=%255Bproject%255D%252Fapp%252Fpage.tsx+%255Bapp-client%255D+%2528ecmascript%2529:1299:246)
+    at Object.react_stack_bottom_frame (file://C:/Users/abham/OneDrive/Desktop/desktop/ML/QuantForge AI/frontend/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:15037:24)
+    at renderWithHooks (file://C:/Users/abham/OneDrive/Desktop/desktop/ML/QuantForge AI/frontend/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:4620:24)
+    at updateFunctionComponent (file://C:/Users/abham/OneDrive/Desktop/desktop/ML/QuantForge AI/frontend/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:6081:21)
+    at beginWork (file://C:/Users/abham/OneDrive/Desktop/desktop/ML/QuantForge AI/frontend/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:6691:24)
+    at runWithFiberInDEV (file://C:/Users/abham/OneDrive/Desktop/desktop/ML/QuantForge AI/frontend/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:965:74)
+    at performUnitOfWork (file://C:/Users/abham/OneDrive/Desktop/desktop/ML/QuantForge AI/frontend/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:9555:97)
+    at workLoopSync (file://C:/Users/abham/OneDrive/Desktop/desktop/ML/QuantForge AI/frontend/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:9449:40)
+    at renderRootSync (file://C:/Users/abham/OneDrive/Desktop/desktop/ML/QuantForge AI/frontend/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:9433:13)
+    at performWorkOnRoot (file://C:/Users/abham/OneDrive/Desktop/desktop/ML/QuantForge AI/frontend/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:9061:186)
+    at performSyncWorkOnRoot (file://C:/Users/abham/OneDrive/Desktop/desktop/ML/QuantForge AI/frontend/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:10263:9)
+    at flushSyncWorkAcrossRoots_impl (file://C:/Users/abham/OneDrive/Desktop/desktop/ML/QuantForge AI/frontend/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:10179:316)
+    at processRootScheduleInMicrotask (file://C:/Users/abham/OneDrive/Desktop/desktop/ML/QuantForge AI/frontend/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:10200:106)
+    at <unknown> (file://C:/Users/abham/OneDrive/Desktop/desktop/ML/QuantForge AI/frontend/.next/dev/static/chunks/node_modules_next_dist_compiled_react-dom_096_9a-._.js:10274:158)
+    at ClientPageRoot (file://C:/Users/abham/OneDrive/Desktop/desktop/ML/QuantForge AI/frontend/.next/dev/static/chunks/node_modules_next_dist_1e9_p6y._.js:4461:50)
+⚠ Fast Refresh had to perform a full reload due to a runtime error.
+⚠ Fast Refresh had to perform a full reload due to a runtime error.
