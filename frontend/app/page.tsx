@@ -20,7 +20,9 @@ import {
   Bell,
   Settings,
   Globe,
-  MessageSquare
+  MessageSquare,
+  ChevronDown,
+  ChevronUp
 } from "lucide-react";
 import { 
   ResponsiveContainer, 
@@ -97,6 +99,17 @@ export default function Dashboard() {
   const [lastUpdated, setLastUpdated] = useState<Date>(new Date());
   const [mounted, setMounted] = useState<boolean>(false);
   const [expandedChart, setExpandedChart] = useState<string | null>(null);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState<boolean>(false);
+
+  const tabs = [
+    { id: "overview", label: "Overview", icon: Compass },
+    { id: "option-chain", label: "Option Chain", icon: Layers },
+    { id: "dealer-positioning", label: "Dealer GEX", icon: BarChart3 },
+    { id: "volatility", label: "Volatility", icon: LineChart },
+    { id: "institutional", label: "Inst. Flows", icon: Globe },
+    { id: "backtest", label: "Backtester", icon: Brain },
+    { id: "terminal", label: "Research AI", icon: Terminal },
+  ];
 
   // Safe numerical formatter
   const safeNumber = (num: number | undefined | null, decimals = 2) => {
@@ -570,6 +583,9 @@ export default function Dashboard() {
   const futureChange = Number(futuresData?.change_pct ?? 0);
   const vixVal = Number(vixData?.value ?? 13.5);
 
+  const activeTabObj = tabs.find(t => t.id === activeTab) || tabs[0];
+  const ActiveIcon = activeTabObj.icon;
+
   return (
     <div className="flex-1 flex flex-col bg-slate-50/20 text-slate-808 min-h-screen font-sans antialiased text-base">
       <style dangerouslySetInnerHTML={{__html: `
@@ -873,13 +889,83 @@ export default function Dashboard() {
 
       {/* Main Terminal Area */}
       <div className="flex-1 flex flex-col lg:flex-row bg-slate-50/30">
-        {/* Sidebar Tabs Panel (Reduced width and compact styles) */}
-        <aside className="w-full lg:w-52 bg-white lg:border-r border-slate-200/80 p-3.5 flex flex-row lg:flex-col gap-1.5 shrink-0 overflow-x-auto lg:overflow-visible scrollbar-none">
-          <div className="hidden lg:block text-[10px] font-black text-slate-400 uppercase tracking-widest px-2 mb-1.5">Platform Analytics</div>
+        {/* Mobile Tab Dropdown Selector (Visible only on mobile/tablet) */}
+        <div className="block lg:hidden bg-white border-b border-slate-200/80 p-3.5 w-full relative z-30">
+          <button
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            className="w-full flex items-center justify-between px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl font-bold text-xs text-slate-808 hover:bg-slate-100 transition-all shadow-sm"
+          >
+            <div className="flex items-center gap-2.5">
+              <ActiveIcon className="h-4.5 w-4.5 text-slate-650" />
+              <span className="tracking-wider uppercase font-black">{activeTabObj.label}</span>
+            </div>
+            {mobileMenuOpen ? (
+              <ChevronUp className="h-4.5 w-4.5 text-slate-500" />
+            ) : (
+              <ChevronDown className="h-4.5 w-4.5 text-slate-500" />
+            )}
+          </button>
+
+          {mobileMenuOpen && (
+            <div className="absolute left-3.5 right-3.5 mt-1.5 bg-white border border-slate-205 rounded-xl shadow-lg z-50 p-2 space-y-1.5 divide-y divide-slate-100 max-h-[300px] overflow-y-auto">
+              <div className="pb-1.5">
+                <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest px-2 block mb-1">Platform Analytics</span>
+                {tabs.slice(0, 5).map((tab) => {
+                  const TabIcon = tab.icon;
+                  return (
+                    <button
+                      key={tab.id}
+                      onClick={() => {
+                        setActiveTab(tab.id);
+                        setMobileMenuOpen(false);
+                      }}
+                      className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-bold transition-all ${
+                        activeTab === tab.id
+                          ? "bg-slate-100 text-slate-900 font-black border border-slate-200 shadow-sm"
+                          : "text-slate-600 hover:bg-slate-50 border border-transparent"
+                      }`}
+                    >
+                      <TabIcon className="h-4.5 w-4.5" />
+                      {tab.label}
+                    </button>
+                  );
+                })}
+              </div>
+
+              <div className="pt-2 pb-0.5">
+                <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest px-2 block mb-1">Quantitative Labs</span>
+                {tabs.slice(5).map((tab) => {
+                  const TabIcon = tab.icon;
+                  return (
+                    <button
+                      key={tab.id}
+                      onClick={() => {
+                        setActiveTab(tab.id);
+                        setMobileMenuOpen(false);
+                      }}
+                      className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-bold transition-all ${
+                        activeTab === tab.id
+                          ? "bg-slate-100 text-slate-900 font-black border border-slate-200 shadow-sm"
+                          : "text-slate-600 hover:bg-slate-50 border border-transparent"
+                      }`}
+                    >
+                      <TabIcon className="h-4.5 w-4.5" />
+                      {tab.label}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* Desktop Sidebar (Visible only on lg screens and above) */}
+        <aside className="hidden lg:flex w-52 bg-white border-r border-slate-200/80 p-3.5 flex-col gap-1.5 shrink-0">
+          <div className="text-[10px] font-black text-slate-400 uppercase tracking-widest px-2 mb-1.5">Platform Analytics</div>
           
           {/* Quick Stats sidebar widget (dealer exposures) */}
           {summaryData && (
-            <div className="hidden lg:block pb-3 border-b border-slate-100">
+            <div className="pb-3 border-b border-slate-100">
               <div className="bg-slate-50 border border-slate-200 p-4 rounded-xl shadow-sm space-y-2.5">
                 <span className="text-xs font-black text-slate-550 tracking-wider flex items-center gap-1 uppercase">
                   <span className="h-1.5 w-1.5 rounded-full bg-slate-450"></span>
@@ -901,91 +987,28 @@ export default function Dashboard() {
             </div>
           )}
 
-          <button
-            onClick={() => setActiveTab("overview")}
-            className={`flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-xs font-bold tracking-wider transition-all shrink-0 whitespace-nowrap ${
-              activeTab === "overview"
-                ? "bg-slate-100 text-slate-808 border border-slate-200 shadow-sm font-black"
-                : "text-slate-500 hover:text-slate-805 hover:bg-slate-50 border border-transparent"
-            }`}
-          >
-            <Compass className="h-4.5 w-4.5" />
-            Overview
-          </button>
-
-          <button
-            onClick={() => setActiveTab("option-chain")}
-            className={`flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-xs font-bold tracking-wider transition-all shrink-0 whitespace-nowrap ${
-              activeTab === "option-chain"
-                ? "bg-slate-100 text-slate-808 border border-slate-200 shadow-sm font-black"
-                : "text-slate-500 hover:text-slate-805 hover:bg-slate-50 border border-transparent"
-            }`}
-          >
-            <Layers className="h-4.5 w-4.5" />
-            Option Chain
-          </button>
-
-          <button
-            onClick={() => setActiveTab("dealer-positioning")}
-            className={`flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-xs font-bold tracking-wider transition-all shrink-0 whitespace-nowrap ${
-              activeTab === "dealer-positioning"
-                ? "bg-slate-100 text-slate-808 border border-slate-200 shadow-sm font-black"
-                : "text-slate-500 hover:text-slate-805 hover:bg-slate-50 border border-transparent"
-            }`}
-          >
-            <BarChart3 className="h-4.5 w-4.5" />
-            Dealer GEX
-          </button>
-
-          <button
-            onClick={() => setActiveTab("volatility")}
-            className={`flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-xs font-bold tracking-wider transition-all shrink-0 whitespace-nowrap ${
-              activeTab === "volatility"
-                ? "bg-slate-100 text-slate-808 border border-slate-200 shadow-sm font-black"
-                : "text-slate-500 hover:text-slate-805 hover:bg-slate-50 border border-transparent"
-            }`}
-          >
-            <LineChart className="h-4.5 w-4.5" />
-            Volatility
-          </button>
-
-          <button
-            onClick={() => setActiveTab("institutional")}
-            className={`flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-xs font-bold tracking-wider transition-all shrink-0 whitespace-nowrap ${
-              activeTab === "institutional"
-                ? "bg-slate-100 text-slate-808 border border-slate-200 shadow-sm font-black"
-                : "text-slate-500 hover:text-slate-805 hover:bg-slate-50 border border-transparent"
-            }`}
-          >
-            <Globe className="h-4.5 w-4.5" />
-            Inst. Flows
-          </button>
-
-          <div className="hidden lg:block text-[10px] font-black text-slate-400 uppercase tracking-widest px-2 pt-4 mb-1.5">Quantitative Labs</div>
-
-          <button
-            onClick={() => setActiveTab("backtest")}
-            className={`flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-xs font-bold tracking-wider transition-all shrink-0 whitespace-nowrap ${
-              activeTab === "backtest"
-                ? "bg-slate-100 text-slate-808 border border-slate-200 shadow-sm font-black"
-                : "text-slate-500 hover:text-slate-805 hover:bg-slate-50 border border-transparent"
-            }`}
-          >
-            <Brain className="h-4.5 w-4.5" />
-            Backtester
-          </button>
-
-          <button
-            onClick={() => setActiveTab("terminal")}
-            className={`flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-xs font-bold tracking-wider transition-all shrink-0 whitespace-nowrap ${
-              activeTab === "terminal"
-                ? "bg-slate-100 text-slate-808 border border-slate-200 shadow-sm font-black"
-                : "text-slate-500 hover:text-slate-805 hover:bg-slate-50 border border-transparent"
-            }`}
-          >
-            <Terminal className="h-4.5 w-4.5" />
-            Research AI
-          </button>
+          {tabs.map((tab) => {
+            const TabIcon = tab.icon;
+            const showDivider = tab.id === "backtest";
+            return (
+              <React.Fragment key={tab.id}>
+                {showDivider && (
+                  <div className="text-[10px] font-black text-slate-400 uppercase tracking-widest px-2 pt-4 mb-1.5">Quantitative Labs</div>
+                )}
+                <button
+                  onClick={() => setActiveTab(tab.id)}
+                  className={`flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-xs font-bold tracking-wider transition-all shrink-0 whitespace-nowrap ${
+                    activeTab === tab.id
+                      ? "bg-slate-100 text-slate-808 border border-slate-200 shadow-sm font-black"
+                      : "text-slate-500 hover:text-slate-805 hover:bg-slate-50 border border-transparent"
+                  }`}
+                >
+                  <TabIcon className="h-4.5 w-4.5" />
+                  {tab.label}
+                </button>
+              </React.Fragment>
+            );
+          })}
         </aside>
 
         {/* Central Terminal Body - Spanning full-width */}
