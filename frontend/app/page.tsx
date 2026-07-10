@@ -460,58 +460,77 @@ export default function Dashboard() {
     try {
       setError(null);
       
-      const [spotRes, niftyRes, bankniftyRes, futRes, vixRes, fiiRes, usdRes] = await Promise.all([
-        fetch(`${API_BASE}/market/spot?symbol=${symbol}`),
+      // 1. Ticker / Global Header data (Required for all tabs)
+      const [niftyRes, bankniftyRes, vixRes, usdRes, fiiRes] = await Promise.all([
         fetch(`${API_BASE}/market/spot?symbol=NIFTY`),
         fetch(`${API_BASE}/market/spot?symbol=BANKNIFTY`),
-        fetch(`${API_BASE}/market/futures?symbol=${symbol}`),
         fetch(`${API_BASE}/market/vix`),
-        fetch(`${API_BASE}/market/fii-dii`),
-        fetch(`${API_BASE}/market/usdinr`)
+        fetch(`${API_BASE}/market/usdinr`),
+        fetch(`${API_BASE}/market/fii-dii`)
       ]);
       
-      if (spotRes.ok) setSpotData(await spotRes.json());
       if (niftyRes.ok) setNiftySpot(await niftyRes.json());
       if (bankniftyRes.ok) setBankniftySpot(await bankniftyRes.json());
-      if (futRes.ok) setFuturesData(await futRes.json());
       if (vixRes.ok) setVixData(await vixRes.json());
-      if (fiiRes.ok) setFiiDiiData(await fiiRes.json());
       if (usdRes.ok) setUsdinrData(await usdRes.json());
+      if (fiiRes.ok) setFiiDiiData(await fiiRes.json());
 
-      const [summaryRes, forecastRes] = await Promise.all([
-        fetch(`${API_BASE}/analytics/summary?symbol=${symbol}`),
-        fetch(`${API_BASE}/signals/forecast?symbol=${symbol}`)
-      ]);
-      
-      if (summaryRes.ok) setSummaryData(await summaryRes.json());
-      if (forecastRes.ok) setForecastData(await forecastRes.json());
-
-      const [chainRes, oiRes, maxPainRes] = await Promise.all([
-        fetch(`${API_BASE}/market/option-chain?symbol=${symbol}`),
-        fetch(`${API_BASE}/analytics/oi?symbol=${symbol}`),
-        fetch(`${API_BASE}/analytics/maxpain?symbol=${symbol}`)
-      ]);
-      if (chainRes.ok) setChainData(await chainRes.json());
-      if (oiRes.ok) setOiData(oiRes.ok ? await oiRes.json() : null);
-      if (maxPainRes.ok) setMaxPainData(await maxPainRes.json());
-
-      if (tabKey === "dealer-positioning") {
-        const [gexProfileRes, dealerRes] = await Promise.all([
+      // 2. Active Tab Specific Data Fetching (Lazy-Loading)
+      if (tabKey === "overview") {
+        const [spotRes, futRes, summaryRes, forecastRes] = await Promise.all([
+          fetch(`${API_BASE}/market/spot?symbol=${symbol}`),
+          fetch(`${API_BASE}/market/futures?symbol=${symbol}`),
+          fetch(`${API_BASE}/analytics/summary?symbol=${symbol}`),
+          fetch(`${API_BASE}/signals/forecast?symbol=${symbol}`)
+        ]);
+        if (spotRes.ok) setSpotData(await spotRes.json());
+        if (futRes.ok) setFuturesData(await futRes.json());
+        if (summaryRes.ok) setSummaryData(await summaryRes.json());
+        if (forecastRes.ok) setForecastData(await forecastRes.json());
+      } 
+      else if (tabKey === "option-chain") {
+        const [spotRes, chainRes, oiRes, maxPainRes] = await Promise.all([
+          fetch(`${API_BASE}/market/spot?symbol=${symbol}`),
+          fetch(`${API_BASE}/market/option-chain?symbol=${symbol}`),
+          fetch(`${API_BASE}/analytics/oi?symbol=${symbol}`),
+          fetch(`${API_BASE}/analytics/maxpain?symbol=${symbol}`)
+        ]);
+        if (spotRes.ok) setSpotData(await spotRes.json());
+        if (chainRes.ok) setChainData(await chainRes.json());
+        if (oiRes.ok) setOiData(await oiRes.json());
+        if (maxPainRes.ok) setMaxPainData(await maxPainRes.json());
+      }
+      else if (tabKey === "dealer-positioning") {
+        const [spotRes, gexProfileRes, dealerRes] = await Promise.all([
+          fetch(`${API_BASE}/market/spot?symbol=${symbol}`),
           fetch(`${API_BASE}/analytics/gex-profile?symbol=${symbol}`),
           fetch(`${API_BASE}/analytics/dealer-positioning?symbol=${symbol}`)
         ]);
+        if (spotRes.ok) setSpotData(await spotRes.json());
         if (gexProfileRes.ok) setGexProfile(await gexProfileRes.json());
         if (dealerRes.ok) setDealerExposureData(await dealerRes.json());
-      } else if (tabKey === "volatility") {
-        const smileRes = await fetch(`${API_BASE}/analytics/volatility-smile?symbol=${symbol}`);
+      } 
+      else if (tabKey === "volatility") {
+        const [spotRes, smileRes] = await Promise.all([
+          fetch(`${API_BASE}/market/spot?symbol=${symbol}`),
+          fetch(`${API_BASE}/analytics/volatility-smile?symbol=${symbol}`)
+        ]);
+        if (spotRes.ok) setSpotData(await spotRes.json());
         if (smileRes.ok) setVolSmile(await smileRes.json());
-      } else if (tabKey === "backtest") {
-        const btRes = await fetch(`${API_BASE}/signals/backtest?symbol=${symbol}&strategy=${backtestStrategy}`);
+      } 
+      else if (tabKey === "backtest") {
+        const [spotRes, btRes] = await Promise.all([
+          fetch(`${API_BASE}/market/spot?symbol=${symbol}`),
+          fetch(`${API_BASE}/signals/backtest?symbol=${symbol}&strategy=${backtestStrategy}`)
+        ]);
+        if (spotRes.ok) setSpotData(await spotRes.json());
         if (btRes.ok) setBacktestData(await btRes.json());
-      } else if (tabKey === "alerts") {
+      } 
+      else if (tabKey === "alerts") {
         const alertRes = await fetch(`${API_BASE}/alerts`);
         if (alertRes.ok) setAlertsData(await alertRes.json());
-      } else if (tabKey === "admin") {
+      } 
+      else if (tabKey === "admin") {
         const [statusRes, logRes] = await Promise.all([
           fetch(`${API_BASE}/admin/status`),
           fetch(`${API_BASE}/admin/logs`)
@@ -586,6 +605,8 @@ export default function Dashboard() {
   const activeTabObj = tabs.find(t => t.id === activeTab) || tabs[0];
   const ActiveIcon = activeTabObj.icon;
 
+  const fiiDiiNetFlow = (fiiDiiData?.fii_net ?? 0) + (fiiDiiData?.dii_net ?? 0);
+
   return (
     <div className="flex-1 flex flex-col bg-slate-50/20 text-slate-808 min-h-screen font-sans antialiased text-base">
       <style dangerouslySetInnerHTML={{__html: `
@@ -595,6 +616,13 @@ export default function Dashboard() {
         }
         .animate-fade-slide {
           animation: fadeSlideUp 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+        .scrollbar-none::-webkit-scrollbar {
+          display: none;
+        }
+        .scrollbar-none {
+          -ms-overflow-style: none;
+          scrollbar-width: none;
         }
         @keyframes modalIn {
           from { opacity: 0; transform: scale(0.96) translateY(10px); }
@@ -893,8 +921,8 @@ export default function Dashboard() {
           </div>
           <div className="flex items-center gap-1.5 shrink-0">
             <span className="text-[#94a3b8] font-bold">FII/DII Net:</span>
-            <span className={(fiiDiiData?.net_flow ?? 0) >= 0 ? "text-emerald-400 font-mono" : "text-rose-400 font-mono"}>
-              {(fiiDiiData?.net_flow ?? 0) >= 0 ? "+" : ""}{safeNumber(fiiDiiData?.net_flow, 1)} Cr
+            <span className={fiiDiiNetFlow >= 0 ? "text-emerald-400 font-mono" : "text-rose-400 font-mono"}>
+              {fiiDiiNetFlow >= 0 ? "+" : ""}{safeNumber(fiiDiiNetFlow, 1)} Cr
             </span>
           </div>
           {/* Mobile indicator for scrolling */}
@@ -1029,7 +1057,7 @@ export default function Dashboard() {
         </aside>
 
         {/* Central Terminal Body - Spanning full-width */}
-        <main className="flex-1 p-5 space-y-5 overflow-y-auto w-full max-w-none">
+        <main className="flex-1 p-3.5 md:p-5 space-y-5 overflow-y-auto w-full max-w-none">
           
 
 
@@ -1038,7 +1066,7 @@ export default function Dashboard() {
             <div className="space-y-5 animate-fade-slide">
               {/* ==================== 1. EXECUTIVE CARD HEADER ==================== */}
               {spotData && (
-                <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5">
+                <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-3.5">
                   {/* Index Spot Price Card — with intraday sparkline */}
                   <div className="bg-white border border-slate-205 p-5 rounded-2xl relative overflow-hidden shadow-sm hover:border-slate-350 transition-all duration-300">
                     <span className="text-[11px] font-black text-slate-500 uppercase tracking-widest block">{symbol} Spot</span>
@@ -1097,6 +1125,21 @@ export default function Dashboard() {
                     </h2>
                     <span className="text-sm font-extrabold text-slate-600 block mt-3">Put/Call Vol Ratio</span>
                   </div>
+
+                  {/* Gamma Flip Card */}
+                  {summaryData?.gamma_flip_level !== undefined && (
+                    <div className="bg-white border border-slate-205 p-5 rounded-2xl relative overflow-hidden shadow-sm hover:border-slate-350 transition-all">
+                      <span className="text-[11px] font-black text-slate-500 uppercase tracking-widest block">Gamma Flip Level</span>
+                      <h2 className="text-5xl font-black mt-2 text-slate-950 font-mono leading-none tracking-tight">
+                        {safeNumber(summaryData.gamma_flip_level, 0)}
+                      </h2>
+                      <span className={`inline-flex items-center gap-1 text-[11px] font-black px-2 py-0.5 rounded border mt-3.5 ${
+                        (spotData?.price ?? 0) >= summaryData.gamma_flip_level ? "bg-emerald-50 text-emerald-700 border-emerald-150" : "bg-rose-50 text-rose-700 border-rose-150"
+                      }`}>
+                        {(spotData?.price ?? 0) >= summaryData.gamma_flip_level ? "Above Flip (BULLISH)" : "Below Flip (BEARISH)"}
+                      </span>
+                    </div>
+                  )}
                 </section>
               )}
               {/* ==================== AI TRADE SIGNAL GENERATOR ADVISOR ==================== */}
