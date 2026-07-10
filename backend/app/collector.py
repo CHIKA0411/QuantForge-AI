@@ -123,18 +123,13 @@ def start_collector():
     # Ensure database is initialized before starting
     init_db()
     
-    # Run once initially to bootstrap the database
-    try:
-        scrape_and_store_job()
-    except Exception as e:
-        logger.error(f"Failed initial database load: {e}")
-
-    # Schedule periodic task
+    # Schedule periodic task and trigger immediately in a background thread
     scheduler.add_job(
         scrape_and_store_job,
         "interval",
         seconds=settings.COLLECTION_INTERVAL_SECONDS,
-        id="nse_scraped_collector"
+        id="nse_scraped_collector",
+        next_run_time=datetime.datetime.now()
     )
     scheduler.start()
     logger.info(f"Background collector started (Interval: {settings.COLLECTION_INTERVAL_SECONDS}s).")
