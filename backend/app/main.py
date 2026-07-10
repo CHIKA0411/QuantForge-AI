@@ -53,6 +53,14 @@ app.include_router(admin.router, prefix="/api")
 app.include_router(research.router, prefix="/api")
 
 # Direct Top-Level API Mappings
+@app.get("/")
+def read_root():
+    return {"status": "healthy", "service": "QuantForge AI Backend API"}
+
+@app.get("/health")
+def health_check():
+    return {"status": "healthy"}
+
 @app.get("/api/pcr")
 def get_top_pcr(symbol: str = "SENSEX", num_strikes: int = 5, db: Session = Depends(get_db)):
     from app.routes.analytics import get_pcr_data
