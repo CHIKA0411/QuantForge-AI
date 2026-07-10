@@ -39,10 +39,58 @@ def run_ml_backtest(df: pd.DataFrame, symbol: str, strategy: str = "AI_Probabili
             else:
                 signals.append("NEUTRAL")
     else:  # AI_Probability
-        for _, row in df.iterrows():
-            features_dict = row.to_dict()
-            pred = predict_market_direction(features_dict, symbol)
-            signals.append(pred["signal"])
+        from app.ml.models import load_ensemble_models, FEATURE_COLS
+        import logging
+        logger = logging.getLogger("quantforge.ml.backtester")
+        
+        models = load_ensemble_models(symbol)
+        
+        if not models:
+            # Auto-train models on synthetic data if none are found on disk (Cold Start)
+            logger.warning(f"No trained models found for {symbol} during backtest. Bootstrapping models...")
+            from app.ml.feature_store import generate_synthetic_history
+            from app.ml.models import train_ensemble_models
+            synth_df = generate_synthetic_history(symbol, 200)
+            train_ensemble_models(synth_df, symbol)
+            models = load_ensemble_models(symbol)
+            
+        if not models:
+            signals = ["NEUTRAL"] * len(df)
+        else:
+            X = df[FEATURE_COLS].values
+            probs_list = []
+            for name, model in models.items():
+                try:
+                    p = model.predict_proba(X)
+                    if p.shape[1] < 3:
+                        p_full = np.zeros((len(df), 3))
+                        for idx, cls in enumerate(model.classes_):
+                            p_full[:, cls] = p[:, idx]
+                        p = p_full
+                    probs_list.append(p)
+                except Exception as e:
+                    logger.error(f"Batch prediction error with {name}: {e}")
+            
+            if not probs_list:
+                signals = ["NEUTRAL"] * len(df)
+            else:
+                mean_probs = np.mean(probs_list, axis=0)
+                confidence_threshold = 0.42
+                signals = []
+                for p in mean_probs:
+                    prob_neutral, prob_up, prob_down = p[0], p[1], p[2]
+                    if prob_up > prob_down and prob_up > prob_neutral:
+                        if prob_up >= confidence_threshold:
+                            signals.append("BUY")
+                        else:
+                            signals.append("NEUTRAL")
+                    elif prob_down > prob_up and prob_down > prob_neutral:
+                        if prob_down >= confidence_threshold:
+                            signals.append("SELL")
+                        else:
+                            signals.append("NEUTRAL")
+                    else:
+                        signals.append("NEUTRAL")
             
     df["sig_label"] = signals
     
