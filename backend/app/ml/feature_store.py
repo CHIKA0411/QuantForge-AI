@@ -29,7 +29,16 @@ def build_feature_record(
     # Calculate GEX / DEX
     # Assume 7 days to expiry (0.019 years) if not calculated exactly
     T = 7.0 / 365.0
-    lot_size = settings.LOT_SIZE_NIFTY if symbol == "NIFTY" else settings.LOT_SIZE_BANKNIFTY
+    if symbol == "NIFTY":
+        lot_size = settings.LOT_SIZE_NIFTY
+    elif symbol == "BANKNIFTY":
+        lot_size = settings.LOT_SIZE_BANKNIFTY
+    elif symbol == "SENSEX":
+        lot_size = settings.LOT_SIZE_SENSEX
+    elif symbol == "BANKEX":
+        lot_size = settings.LOT_SIZE_BANKEX
+    else:
+        lot_size = 25
     exposure_dict = calculate_dealer_exposures(options, spot_price, lot_size, T, settings.RISK_FREE_RATE)
     
     skew = calculate_iv_skew(options, spot_price)
@@ -53,6 +62,7 @@ def build_feature_record(
     vol_imbalance = (pe_vol - ce_vol) / (pe_vol + ce_vol) if (pe_vol + ce_vol) > 0 else 0.0
 
     return {
+        "spot_price": spot_price,
         "pcr_oi": pcr_dict["pcr_oi"],
         "pcr_vol": pcr_dict["pcr_volume"],
         "vix": vix_value,

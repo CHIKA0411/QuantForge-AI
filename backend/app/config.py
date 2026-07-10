@@ -43,7 +43,7 @@ class Settings(BaseSettings):
     RISK_FREE_RATE: float = Field(default=0.07, description="Risk-free interest rate (e.g. 0.07 for 7% p.a.)")
 
     class Config:
-        env_file = Path(__file__).resolve().parent / ".env"
+        env_file = Path(__file__).resolve().parent.parent / ".env"
         env_file_encoding = "utf-8"
         extra = "ignore"
 

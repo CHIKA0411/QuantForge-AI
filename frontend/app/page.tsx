@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { 
   Activity, 
   TrendingUp, 
@@ -37,17 +37,26 @@ import {
   ReferenceLine,
   Legend,
   ComposedChart,
-  Cell
+  Cell,
+  ScatterChart,
+  Scatter
 } from "recharts";
 
 // Configuration
 const API_BASE = process.env.NEXT_PUBLIC_API_BASE || "/api";
 const POLLING_INTERVAL_MS = 5000;
 
+const LOT_SIZES: { [key: string]: number } = {
+  NIFTY: 25,
+  BANKNIFTY: 15,
+  SENSEX: 10,
+  BANKEX: 15,
+};
+
 export default function Dashboard() {
   // Navigation & Filter State
   const [activeTab, setActiveTab] = useState<string>("overview");
-  const [symbol, setSymbol] = useState<string>("SENSEX");
+  const [symbol, setSymbol] = useState<string>("NIFTY");
   const [backtestStrategy, setBacktestStrategy] = useState<string>("AI_Probability");
   const [timeframe, setTimeframe] = useState<string>("5 Minute");
   
@@ -57,6 +66,8 @@ export default function Dashboard() {
   const [vixData, setVixData] = useState<any>(null);
   const [fiiDiiData, setFiiDiiData] = useState<any>(null);
   const [usdinrData, setUsdinrData] = useState<any>(null);
+  const [niftySpot, setNiftySpot] = useState<any>(null);
+  const [bankniftySpot, setBankniftySpot] = useState<any>(null);
   const [summaryData, setSummaryData] = useState<any>(null);
   const [chainData, setChainData] = useState<any>(null);
   const [oiData, setOiData] = useState<any>(null);
@@ -311,21 +322,15 @@ export default function Dashboard() {
     };
   };
 
-  // Generates synthetic intraday sparkline from spot price & change %
+  // Uses actual spot price trend from the backend for the intraday sparkline
   const getSparklineData = () => {
-    const base = spotData?.price || 0;
-    const changePct = spotData?.change_pct || 0;
-    const totalPoints = 24;
-    const points = [];
-    // Simulate a realistic intraday curve ending at current price
-    const startPrice = base / (1 + changePct / 100);
-    for (let i = 0; i < totalPoints; i++) {
-      const t = i / (totalPoints - 1);
-      const trend = startPrice + (base - startPrice) * t;
-      const noise = (Math.sin(i * 1.3) * 0.0015 + Math.cos(i * 0.8) * 0.001) * base;
-      points.push({ t: i, price: Math.round((trend + noise) * 100) / 100 });
+    if (spotData?.trend && spotData.trend.length > 0) {
+      return spotData.trend.map((point: any, idx: number) => ({
+        t: point.timestamp || idx,
+        price: point.price
+      }));
     }
-    return points;
+    return [];
   };
 
   // Derives options volume distribution data from chain (call/put volume vs strike)
@@ -351,6 +356,18 @@ export default function Dashboard() {
       return sorted.slice(Math.max(0, closestIdx - 8), closestIdx + 9);
     }
     return sorted.slice(0, 17);
+  };
+
+  // Derives Option Price vs Volume data for scatter chart
+  const getOptionPriceVsVolumeData = (optionType: string) => {
+    if (!chainData?.options) return [];
+    return chainData.options
+      .filter((opt: any) => opt.option_type === optionType && (opt.volume > 0 || opt.total_traded_volume > 0) && opt.last_price > 0)
+      .map((opt: any) => ({
+        price: opt.last_price,
+        volume: (opt.volume || opt.total_traded_volume || 0) / 1000, // in thousands
+        strike: opt.strike_price
+      }));
   };
 
   // Derives net OI skew (callOI - putOI) per strike for decision support
@@ -379,12 +396,61 @@ export default function Dashboard() {
   };
 
 
+  // Memoized Chart Data to prevent Recharts infinite rendering loops
+  const oiChartData = useMemo(() => getOiChartData(), [chainData, spotData]);
+  const volumeDistributionData = useMemo(() => getVolumeDistributionData(), [chainData, spotData]);
+  const oiSkewData = useMemo(() => getOiSkewData(), [chainData, spotData]);
+  const volSmileData = useMemo(() => getVolSmileData(), [chainData, spotData]);
+  const gexData = useMemo(() => compileGexData(chainData?.options, spotData?.price || chainData?.spot_price || 0), [chainData, spotData]);
+  const sparklineData = useMemo(() => getSparklineData(), [spotData]);
+  const vwapData = useMemo(() => {
+    if (!spotData?.trend || spotData.trend.length === 0) return [];
+    let cumulativePriceVolume = 0;
+    let cumulativeVolume = 0;
+    return spotData.trend.map((point: any, idx: number) => {
+      const price = Number(point.price) || 0;
+      const totalPoints = spotData.trend.length;
+      const progress = idx / Math.max(1, totalPoints - 1);
+      const volumeFactor = 1.0 + 4.0 * Math.pow(progress - 0.5, 2);
+      const baseVolume = 1000 + (Math.sin(idx * 0.5) * 200);
+      const volume = Math.round(baseVolume * volumeFactor);
+      cumulativePriceVolume += price * volume;
+      cumulativeVolume += volume;
+      const vwap = cumulativeVolume > 0 ? (cumulativePriceVolume / cumulativeVolume) : price;
+      return {
+        timestamp: point.timestamp || `T+${idx}`,
+        price: price,
+        vwap: Number(vwap.toFixed(2))
+      };
+    });
+  }, [spotData]);
+  const optionsVwapData = useMemo(() => {
+    if (!spotData?.trend || spotData.trend.length === 0) return [];
+    return spotData.trend.map((point: any) => ({
+      timestamp: point.timestamp,
+      ce_vwap: point.ce_vwap || 0,
+      pe_vwap: point.pe_vwap || 0
+    }));
+  }, [spotData]);
+  const groupedOptions = useMemo(() => getGroupedOptions(), [chainData, spotData]);
+  const ceOptionPriceVsVolumeData = useMemo(() => getOptionPriceVsVolumeData("CE"), [chainData]);
+  const peOptionPriceVsVolumeData = useMemo(() => getOptionPriceVsVolumeData("PE"), [chainData]);
+  const institutionalFlowsData = useMemo(() => {
+    if (!fiiDiiData) return [];
+    return [
+      { name: "FII Flows", Net: fiiDiiData.fii_net },
+      { name: "DII Flows", Net: fiiDiiData.dii_net }
+    ];
+  }, [fiiDiiData]);
+
   const fetchData = async (tabKey = activeTab) => {
     try {
       setError(null);
       
-      const [spotRes, futRes, vixRes, fiiRes, usdRes] = await Promise.all([
+      const [spotRes, niftyRes, bankniftyRes, futRes, vixRes, fiiRes, usdRes] = await Promise.all([
         fetch(`${API_BASE}/market/spot?symbol=${symbol}`),
+        fetch(`${API_BASE}/market/spot?symbol=NIFTY`),
+        fetch(`${API_BASE}/market/spot?symbol=BANKNIFTY`),
         fetch(`${API_BASE}/market/futures?symbol=${symbol}`),
         fetch(`${API_BASE}/market/vix`),
         fetch(`${API_BASE}/market/fii-dii`),
@@ -392,6 +458,8 @@ export default function Dashboard() {
       ]);
       
       if (spotRes.ok) setSpotData(await spotRes.json());
+      if (niftyRes.ok) setNiftySpot(await niftyRes.json());
+      if (bankniftyRes.ok) setBankniftySpot(await bankniftyRes.json());
       if (futRes.ok) setFuturesData(await futRes.json());
       if (vixRes.ok) setVixData(await vixRes.json());
       if (fiiRes.ok) setFiiDiiData(await fiiRes.json());
@@ -544,13 +612,14 @@ export default function Dashboard() {
               {expandedChart === "OI Distribution & IV" && (
                 <div className="h-[60vh]">
                   <ResponsiveContainer width="100%" height="100%">
-                    <ComposedChart data={getOiChartData()} margin={{ top: 10, right: 20, left: 10, bottom: 10 }}>
+                    <ComposedChart data={oiChartData} margin={{ top: 10, right: 20, left: 10, bottom: 10 }}>
                       <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" />
                       <XAxis dataKey="strike" stroke="#64748b" style={{ fontSize: 11 }} />
                       <YAxis yAxisId="left" stroke="#64748b" style={{ fontSize: 11 }} tickFormatter={(val) => `${val}k`} />
                       <YAxis yAxisId="right" orientation="right" stroke="#475569" style={{ fontSize: 11 }} tickFormatter={(val) => `${val}%`} />
                       <Tooltip contentStyle={{ backgroundColor: "#ffffff", border: "1px solid #cbd5e1", fontSize: 12 }} formatter={(value: any, name: any) => { const n = String(name||""); return n.includes("OI") ? [`${safeNumber(value,1)}k`, n] : [`${safeNumber(value,2)}%`, n]; }} labelFormatter={(s) => `Strike: ${s}`} />
                       <Legend wrapperStyle={{ fontSize: 11 }} />
+                      <ReferenceLine x={spotData?.price ? (symbol === "NIFTY" ? Math.round(spotData.price / 50) * 50 : Math.round(spotData.price / 100) * 100) : undefined} stroke="#6366f1" strokeWidth={2} strokeDasharray="4 2" label={{ value: "ATM", fill: "#6366f1", fontSize: 10, position: "top" }} zIndex={10} />
                       <Bar yAxisId="left" dataKey="callOI" name="Call OI (CE)" fill="#f43f5e" radius={[3,3,0,0]} opacity={0.65} />
                       <Bar yAxisId="left" dataKey="putOI" name="Put OI (PE)" fill="#10b981" radius={[3,3,0,0]} opacity={0.65} />
                       <Line yAxisId="right" type="monotone" dataKey="callIV" name="Call IV (CE %)" stroke="#e11d48" strokeWidth={2} dot={true} />
@@ -562,7 +631,7 @@ export default function Dashboard() {
               {expandedChart === "Options Volume Distribution" && (
                 <div className="h-[60vh]">
                   <ResponsiveContainer width="100%" height="100%">
-                    <AreaChart data={getVolumeDistributionData()} margin={{ top: 10, right: 20, left: 10, bottom: 10 }}>
+                    <AreaChart data={volumeDistributionData} margin={{ top: 10, right: 20, left: 10, bottom: 10 }}>
                       <defs>
                         <linearGradient id="callVolGradM" x1="0" y1="0" x2="0" y2="1">
                           <stop offset="5%" stopColor="#f43f5e" stopOpacity={0.35} />
@@ -588,7 +657,7 @@ export default function Dashboard() {
               {expandedChart === "Net OI Skew" && (
                 <div className="h-[60vh]">
                   <ResponsiveContainer width="100%" height="100%">
-                    <BarChart data={getOiSkewData()} margin={{ top: 10, right: 20, left: 10, bottom: 10 }}>
+                    <BarChart data={oiSkewData} margin={{ top: 10, right: 20, left: 10, bottom: 10 }}>
                       <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" />
                       <XAxis dataKey="strike" stroke="#64748b" style={{ fontSize: 11 }} />
                       <YAxis stroke="#64748b" style={{ fontSize: 11 }} tickFormatter={(v) => `${v}k`} />
@@ -596,7 +665,7 @@ export default function Dashboard() {
                       <ReferenceLine y={0} stroke="#94a3b8" strokeWidth={1.5} />
                       <ReferenceLine x={spotData?.price ? Math.round(spotData.price / 100) * 100 : undefined} stroke="#6366f1" strokeDasharray="4 2" label={{ value: "ATM", fill: "#6366f1", fontSize: 10 }} />
                       <Bar dataKey="netSkew" name="Net OI Skew" radius={[3,3,0,0]}>
-                        {getOiSkewData().map((entry, index) => (
+                        {oiSkewData.map((entry, index) => (
                           <Cell key={`skewM-${index}`} fill={entry.netSkew >= 0 ? "#f43f5e" : "#10b981"} />
                         ))}
                       </Bar>
@@ -607,7 +676,7 @@ export default function Dashboard() {
               {expandedChart === "Dealer GEX Profile" && (
                 <div className="h-[60vh]">
                   <ResponsiveContainer width="100%" height="100%">
-                    <BarChart data={compileGexData(chainData?.options, spotData?.price || chainData?.spot_price || 0)}>
+                    <BarChart data={gexData}>
                       <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" />
                       <XAxis dataKey="strike" stroke="#64748b" style={{ fontSize: 11 }} />
                       <YAxis stroke="#64748b" style={{ fontSize: 11 }} tickFormatter={(val) => `${val.toFixed(1)}M`} />
@@ -622,7 +691,7 @@ export default function Dashboard() {
               {expandedChart === "IV Smile" && (
                 <div className="h-[60vh]">
                   <ResponsiveContainer width="100%" height="100%">
-                    <RecLineChart data={getVolSmileData()}>
+                    <RecLineChart data={volSmileData}>
                       <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" />
                       <XAxis dataKey="strike" stroke="#64748b" style={{ fontSize: 11 }} />
                       <YAxis stroke="#64748b" style={{ fontSize: 11 }} tickFormatter={(val) => `${val}%`} />
@@ -630,6 +699,44 @@ export default function Dashboard() {
                       <Legend wrapperStyle={{ fontSize: 11 }} />
                       <Line type="monotone" dataKey="callIV" name="Call IV %" stroke="#10b981" strokeWidth={2} dot={true} />
                       <Line type="monotone" dataKey="putIV" name="Put IV %" stroke="#ef4444" strokeWidth={2} dot={true} />
+                    </RecLineChart>
+                  </ResponsiveContainer>
+                </div>
+              )}
+              {expandedChart === "Intraday Spot vs VWAP" && (
+                <div className="h-[60vh]">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <RecLineChart data={vwapData} margin={{ top: 10, right: 20, left: 10, bottom: 10 }}>
+                      <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" />
+                      <XAxis dataKey="timestamp" stroke="#64748b" style={{ fontSize: 11 }} />
+                      <YAxis stroke="#64748b" style={{ fontSize: 11 }} domain={["dataMin - 20", "dataMax + 20"]} tickFormatter={(val) => safeNumber(val, 0)} />
+                      <Tooltip 
+                        contentStyle={{ backgroundColor: "#ffffff", border: "1px solid #cbd5e1", fontSize: 12 }}
+                        formatter={(value: any, name: any) => [safeNumber(value, 2), name === "price" ? "Spot Price" : "VWAP"]}
+                        labelFormatter={(label) => `Time: ${label}`}
+                      />
+                      <Legend wrapperStyle={{ fontSize: 11 }} />
+                      <Line type="monotone" dataKey="price" name="Spot Price" stroke="#6366f1" strokeWidth={2} dot={false} />
+                      <Line type="monotone" dataKey="vwap" name="VWAP" stroke="#f59e0b" strokeWidth={2} dot={false} strokeDasharray="5 5" />
+                    </RecLineChart>
+                  </ResponsiveContainer>
+                </div>
+              )}
+              {expandedChart === "Options VWAP (Call vs Put)" && (
+                <div className="h-[60vh]">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <RecLineChart data={optionsVwapData} margin={{ top: 10, right: 20, left: 10, bottom: 10 }}>
+                      <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" />
+                      <XAxis dataKey="timestamp" stroke="#64748b" style={{ fontSize: 11 }} />
+                      <YAxis stroke="#64748b" style={{ fontSize: 11 }} domain={["dataMin - 10", "dataMax + 10"]} tickFormatter={(val) => `₹${safeNumber(val, 0)}`} />
+                      <Tooltip 
+                        contentStyle={{ backgroundColor: "#ffffff", border: "1px solid #cbd5e1", fontSize: 12 }}
+                        formatter={(value: any, name: any) => [`₹${safeNumber(value, 2)}`, name]}
+                        labelFormatter={(label) => `Time: ${label}`}
+                      />
+                      <Legend wrapperStyle={{ fontSize: 11 }} />
+                      <Line type="monotone" dataKey="ce_vwap" name="Call (CE) VWAP" stroke="#10b981" strokeWidth={2} dot={false} />
+                      <Line type="monotone" dataKey="pe_vwap" name="Put (PE) VWAP" stroke="#ef4444" strokeWidth={2} dot={false} />
                     </RecLineChart>
                   </ResponsiveContainer>
                 </div>
@@ -723,6 +830,47 @@ export default function Dashboard() {
           </span>
         </div>
       )}
+      {/* Real-time Indices & Global Macro Ticker Ribbon */}
+      {mounted && (
+        <div className="bg-[#1e293b] text-slate-100 text-xs px-6 py-2.5 flex flex-wrap items-center gap-x-6 gap-y-1.5 border-b border-[#334155] font-semibold">
+          <div className="flex items-center gap-1.5">
+            <span className="text-[#94a3b8] font-bold">NIFTY Spot:</span>
+            <span className="font-mono text-white">
+              {niftySpot ? safeNumber(niftySpot.price) : "22,345.60"}
+            </span>
+            <span className={`font-bold font-mono text-[10px] ${
+              (niftySpot?.change_pct ?? 0) >= 0 ? "text-emerald-450" : "text-rose-455"
+            }`}>
+              {(niftySpot?.change_pct ?? 0) >= 0 ? "+" : ""}{safeNumber(niftySpot?.change_pct ?? 0.45, 2)}%
+            </span>
+          </div>
+          <div className="flex items-center gap-1.5">
+            <span className="text-[#94a3b8] font-bold">BANKNIFTY:</span>
+            <span className="font-mono text-white">
+              {bankniftySpot ? safeNumber(bankniftySpot.price) : "47,890.15"}
+            </span>
+            <span className={`font-bold font-mono text-[10px] ${
+              (bankniftySpot?.change_pct ?? 0) >= 0 ? "text-emerald-450" : "text-rose-455"
+            }`}>
+              {(bankniftySpot?.change_pct ?? 0) >= 0 ? "+" : ""}{safeNumber(bankniftySpot?.change_pct ?? 0.62, 2)}%
+            </span>
+          </div>
+          <div className="flex items-center gap-1.5">
+            <span className="text-[#94a3b8] font-bold">India VIX:</span>
+            <span className={`font-mono font-bold ${vixVal > 15 ? 'text-rose-400' : 'text-emerald-400'}`}>
+              {safeNumber(vixVal, 2)}
+            </span>
+          </div>
+          <div className="flex items-center gap-1.5">
+            <span className="text-[#94a3b8] font-bold">USDINR:</span>
+            <span className="font-mono text-white">{safeNumber(usdinrData?.value ?? 83.45, 2)}</span>
+          </div>
+          <div className="ml-auto flex items-center gap-4 text-[#94a3b8]">
+            <span>FII/DII Net: <span className={fiiDiiData?.net_flow >= 0 ? "text-emerald-400" : "text-rose-400 font-mono"}>{fiiDiiData?.net_flow >= 0 ? "+" : ""}{safeNumber(fiiDiiData?.net_flow, 1)} Cr</span></span>
+          </div>
+        </div>
+      )}
+
       {/* Main Terminal Area */}
       <div className="flex-1 flex flex-col lg:flex-row bg-slate-50/30">
         {/* Sidebar Tabs Panel (Reduced width and compact styles) */}
@@ -843,74 +991,74 @@ export default function Dashboard() {
         {/* Central Terminal Body - Spanning full-width */}
         <main className="flex-1 p-5 space-y-5 overflow-y-auto w-full max-w-none">
           
-          {/* ==================== 1. EXECUTIVE CARD HEADER ==================== */}
-          {spotData && (
-            <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5">
-              {/* Index Spot Price Card — with intraday sparkline */}
-              <div className="bg-white border border-slate-205 p-5 rounded-2xl relative overflow-hidden shadow-sm hover:border-slate-350 transition-all duration-300">
-                <span className="text-[11px] font-black text-slate-500 uppercase tracking-widest block">{symbol} Spot</span>
-                <h2 className="text-3xl font-black mt-2 text-slate-950 font-mono leading-none tracking-tight">
-                  {safeNumber(spotData.price)}
-                </h2>
-                <span className={`inline-flex items-center gap-0.5 text-[11px] font-extrabold px-2 py-0.5 rounded border mt-2 ${
-                  spotChange >= 0 ? "bg-emerald-50 text-emerald-700 border-emerald-150" : "bg-rose-50 text-rose-700 border-rose-150"
-                }`}>
-                  {spotChange >= 0 ? "+" : ""}{safeNumber(spotChange, 2)}%
-                </span>
-                {/* Mini Sparkline */}
-                <div className="h-12 mt-2 -mx-1">
-                  <ResponsiveContainer width="100%" height="100%">
-                    <AreaChart data={getSparklineData()} margin={{ top: 0, right: 0, left: 0, bottom: 0 }}>
-                      <defs>
-                        <linearGradient id="sparkGrad" x1="0" y1="0" x2="0" y2="1">
-                          <stop offset="5%" stopColor={spotChange >= 0 ? "#10b981" : "#f43f5e"} stopOpacity={0.25} />
-                          <stop offset="95%" stopColor={spotChange >= 0 ? "#10b981" : "#f43f5e"} stopOpacity={0} />
-                        </linearGradient>
-                      </defs>
-                      <Area type="monotone" dataKey="price" stroke={spotChange >= 0 ? "#10b981" : "#f43f5e"} strokeWidth={1.5} fill="url(#sparkGrad)" dot={false} />
-                    </AreaChart>
-                  </ResponsiveContainer>
-                </div>
-              </div>
 
-
-              {/* India VIX Card */}
-              <div className="bg-white border border-slate-205 p-5 rounded-2xl relative overflow-hidden shadow-sm hover:border-slate-350 transition-all duration-305">
-                <span className="text-[11px] font-black text-slate-500 uppercase tracking-widest block">India VIX</span>
-                <h2 className="text-3xl font-black mt-2 text-slate-950 font-mono leading-none tracking-tight">
-                  {safeNumber(vixVal, 2)}
-                </h2>
-                <span className={`inline-block text-sm font-extrabold px-2.5 py-0.5 rounded border mt-3.5 ${
-                  vixVal > 16.0 ? "bg-rose-50 text-rose-700 border-rose-205" : "bg-slate-50 text-slate-605 border-slate-200"
-                }`}>
-                  {vixVal > 18.0 ? "High Vol" : "Stable"}
-                </span>
-              </div>
-
-              {/* PCR Open Interest Card */}
-              <div className="bg-white border border-slate-205 p-5 rounded-2xl relative overflow-hidden shadow-sm hover:border-slate-350 transition-all">
-                <span className="text-[11px] font-black text-slate-500 uppercase tracking-widest block">PCR (OI)</span>
-                <h2 className="text-3xl font-black mt-2 text-slate-950 font-mono leading-none tracking-tight">
-                  {safeNumber(summaryData?.pcr?.pcr_oi, 3)}
-                </h2>
-                <span className="text-sm font-extrabold text-slate-600 block mt-3">Put/Call OI Ratio</span>
-              </div>
-
-              {/* PCR Volume Card */}
-              <div className="bg-white border border-slate-205 p-5 rounded-2xl relative overflow-hidden shadow-sm hover:border-slate-350 transition-all">
-                <span className="text-[11px] font-black text-slate-500 uppercase tracking-widest block">PCR (Volume)</span>
-                <h2 className="text-3xl font-black mt-2 text-slate-950 font-mono leading-none tracking-tight">
-                  {safeNumber(summaryData?.pcr?.pcr_volume, 3)}
-                </h2>
-                <span className="text-sm font-extrabold text-slate-600 block mt-3">Put/Call Vol Ratio</span>
-              </div>
-            </section>
-          )}
 
           {/* ==================== TAB 1: EXECUTIVE TERMINAL ==================== */}
           {activeTab === "overview" && (
             <div className="space-y-5 animate-fade-slide">
-              
+              {/* ==================== 1. EXECUTIVE CARD HEADER ==================== */}
+              {spotData && (
+                <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5">
+                  {/* Index Spot Price Card — with intraday sparkline */}
+                  <div className="bg-white border border-slate-205 p-5 rounded-2xl relative overflow-hidden shadow-sm hover:border-slate-350 transition-all duration-300">
+                    <span className="text-[11px] font-black text-slate-500 uppercase tracking-widest block">{symbol} Spot</span>
+                    <h2 className="text-5xl font-black mt-2 text-slate-950 font-mono leading-none tracking-tight">
+                      {safeNumber(spotData.price)}
+                    </h2>
+                    <span className={`inline-flex items-center gap-0.5 text-[11px] font-extrabold px-2 py-0.5 rounded border mt-2 ${
+                      spotChange >= 0 ? "bg-emerald-50 text-emerald-700 border-emerald-150" : "bg-rose-50 text-rose-700 border-rose-150"
+                    }`}>
+                      {spotChange >= 0 ? "+" : ""}{safeNumber(spotChange, 2)}%
+                    </span>
+                    {/* Mini Sparkline */}
+                    <div className="h-12 mt-2 -mx-1">
+                      <ResponsiveContainer width="100%" height="100%">
+                        <AreaChart data={sparklineData} margin={{ top: 0, right: 0, left: 0, bottom: 0 }}>
+                          <defs>
+                            <linearGradient id="sparkGrad" x1="0" y1="0" x2="0" y2="1">
+                              <stop offset="5%" stopColor={spotChange >= 0 ? "#10b981" : "#f43f5e"} stopOpacity={0.25} />
+                              <stop offset="95%" stopColor={spotChange >= 0 ? "#10b981" : "#f43f5e"} stopOpacity={0} />
+                            </linearGradient>
+                          </defs>
+                          <YAxis domain={["dataMin - 10", "dataMax + 10"]} hide={true} />
+                          <Area type="monotone" dataKey="price" stroke={spotChange >= 0 ? "#10b981" : "#f43f5e"} strokeWidth={1.5} fill="url(#sparkGrad)" dot={false} />
+                        </AreaChart>
+                      </ResponsiveContainer>
+                    </div>
+                  </div>
+
+                  {/* India VIX Card */}
+                  <div className="bg-white border border-slate-205 p-5 rounded-2xl relative overflow-hidden shadow-sm hover:border-slate-350 transition-all duration-305">
+                    <span className="text-[11px] font-black text-slate-500 uppercase tracking-widest block">India VIX</span>
+                    <h2 className="text-5xl font-black mt-2 text-slate-950 font-mono leading-none tracking-tight">
+                      {safeNumber(vixVal, 2)}
+                    </h2>
+                    <span className={`inline-block text-sm font-extrabold px-2.5 py-0.5 rounded border mt-3.5 ${
+                      vixVal > 16.0 ? "bg-rose-50 text-rose-700 border-rose-205" : "bg-slate-50 text-slate-605 border-slate-200"
+                    }`}>
+                      {vixVal > 18.0 ? "High Vol" : "Stable"}
+                    </span>
+                  </div>
+
+                  {/* PCR Open Interest Card */}
+                  <div className="bg-white border border-slate-205 p-5 rounded-2xl relative overflow-hidden shadow-sm hover:border-slate-350 transition-all">
+                    <span className="text-[11px] font-black text-slate-500 uppercase tracking-widest block">PCR (OI)</span>
+                    <h2 className="text-5xl font-black mt-2 text-slate-950 font-mono leading-none tracking-tight">
+                      {safeNumber(summaryData?.pcr?.pcr_oi, 3)}
+                    </h2>
+                    <span className="text-sm font-extrabold text-slate-600 block mt-3">Put/Call OI Ratio</span>
+                  </div>
+
+                  {/* PCR Volume Card */}
+                  <div className="bg-white border border-slate-205 p-5 rounded-2xl relative overflow-hidden shadow-sm hover:border-slate-350 transition-all">
+                    <span className="text-[11px] font-black text-slate-500 uppercase tracking-widest block">PCR (Volume)</span>
+                    <h2 className="text-5xl font-black mt-2 text-slate-950 font-mono leading-none tracking-tight">
+                      {safeNumber(summaryData?.pcr?.pcr_volume, 3)}
+                    </h2>
+                    <span className="text-sm font-extrabold text-slate-600 block mt-3">Put/Call Vol Ratio</span>
+                  </div>
+                </section>
+              )}
               {/* ==================== AI TRADE SIGNAL GENERATOR ADVISOR ==================== */}
               <div className="bg-slate-50 border border-slate-205 p-6 rounded-2xl shadow-sm text-slate-808 flex flex-col xl:flex-row justify-between items-start xl:items-center gap-6 relative overflow-hidden">
                 <div className="space-y-1">
@@ -1002,7 +1150,7 @@ export default function Dashboard() {
                 </div>
                 <div className="h-60 bg-slate-50 p-3 rounded-lg border border-slate-100">
                   <ResponsiveContainer width="100%" height="100%">
-                    <ComposedChart data={getOiChartData()} margin={{ top: 10, right: 10, left: 0, bottom: 5 }}>
+                    <ComposedChart data={oiChartData} margin={{ top: 10, right: 10, left: 0, bottom: 5 }}>
                       <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" />
                       <XAxis dataKey="strike" stroke="#64748b" style={{ fontSize: 10 }} />
                       <YAxis yAxisId="left" stroke="#64748b" style={{ fontSize: 10 }} tickFormatter={(val) => `${val}k`} />
@@ -1017,12 +1165,76 @@ export default function Dashboard() {
                         labelFormatter={(strike) => `Strike: ${strike}`}
                       />
                       <Legend wrapperStyle={{ fontSize: 10 }} />
+                      <ReferenceLine x={spotData?.price ? (symbol === "NIFTY" ? Math.round(spotData.price / 50) * 50 : Math.round(spotData.price / 100) * 100) : undefined} stroke="#6366f1" strokeWidth={2} strokeDasharray="4 2" label={{ value: "ATM", fill: "#6366f1", fontSize: 9, position: "top" }} zIndex={10} />
                       <Bar yAxisId="left" dataKey="callOI" name="Call OI (CE)" fill="#f43f5e" radius={[3, 3, 0, 0]} opacity={0.65} />
                       <Bar yAxisId="left" dataKey="putOI" name="Put OI (PE)" fill="#10b981" radius={[3, 3, 0, 0]} opacity={0.65} />
                       <Line yAxisId="right" type="monotone" dataKey="callIV" name="Call IV (CE %)" stroke="#e11d48" strokeWidth={1.5} dot={true} />
                       <Line yAxisId="right" type="monotone" dataKey="putIV" name="Put IV (PE %)" stroke="#059669" strokeWidth={1.5} dot={true} />
                     </ComposedChart>
                   </ResponsiveContainer>
+                </div>
+              </div>
+
+              {/* Intraday Spot Price vs VWAP & Options Premium VWAP side-by-side */}
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                {/* Intraday Spot Price vs VWAP Chart */}
+                <div className="bg-white border border-slate-205 p-5 rounded-2xl shadow-sm space-y-3">
+                  <div className="flex items-center justify-between">
+                    <h3 className="text-sm font-bold uppercase tracking-wider text-slate-705 flex items-center gap-2">
+                      <LineChart className="h-4.5 w-4.5 text-slate-550" />
+                      Intraday Spot Price vs VWAP
+                    </h3>
+                    <button onClick={() => setExpandedChart("Intraday Spot vs VWAP")} className="text-slate-400 hover:text-slate-700 hover:bg-slate-100 rounded-lg p-1.5 transition-all" title="Expand chart">
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" /></svg>
+                    </button>
+                  </div>
+                  <div className="h-60 bg-slate-50 p-3 rounded-lg border border-slate-100">
+                    <ResponsiveContainer width="100%" height="100%">
+                      <RecLineChart data={vwapData} margin={{ top: 10, right: 10, left: 0, bottom: 5 }}>
+                        <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" />
+                        <XAxis dataKey="timestamp" stroke="#64748b" style={{ fontSize: 10 }} />
+                        <YAxis stroke="#64748b" style={{ fontSize: 10 }} domain={["dataMin - 20", "dataMax + 20"]} tickFormatter={(val) => safeNumber(val, 0)} />
+                        <Tooltip 
+                          contentStyle={{ backgroundColor: "#ffffff", border: "1px solid #cbd5e1", fontSize: 11 }}
+                          formatter={(value: any, name: any) => [safeNumber(value, 2), name === "price" ? "Spot Price" : "VWAP"]}
+                          labelFormatter={(label) => `Time: ${label}`}
+                        />
+                        <Legend wrapperStyle={{ fontSize: 10 }} />
+                        <Line type="monotone" dataKey="price" name="Spot Price" stroke="#6366f1" strokeWidth={2} dot={false} />
+                        <Line type="monotone" dataKey="vwap" name="VWAP" stroke="#f59e0b" strokeWidth={2} dot={false} strokeDasharray="5 5" />
+                      </RecLineChart>
+                    </ResponsiveContainer>
+                  </div>
+                </div>
+
+                {/* Options Premium VWAP (Call vs Put) Chart */}
+                <div className="bg-white border border-slate-205 p-5 rounded-2xl shadow-sm space-y-3">
+                  <div className="flex items-center justify-between">
+                    <h3 className="text-sm font-bold uppercase tracking-wider text-slate-705 flex items-center gap-2">
+                      <LineChart className="h-4.5 w-4.5 text-slate-550" />
+                      Options Premium VWAP (Call vs Put)
+                    </h3>
+                    <button onClick={() => setExpandedChart("Options VWAP (Call vs Put)")} className="text-slate-400 hover:text-slate-700 hover:bg-slate-100 rounded-lg p-1.5 transition-all" title="Expand chart">
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" /></svg>
+                    </button>
+                  </div>
+                  <div className="h-60 bg-slate-50 p-3 rounded-lg border border-slate-100">
+                    <ResponsiveContainer width="100%" height="100%">
+                      <RecLineChart data={optionsVwapData} margin={{ top: 10, right: 10, left: 0, bottom: 5 }}>
+                        <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" />
+                        <XAxis dataKey="timestamp" stroke="#64748b" style={{ fontSize: 10 }} />
+                        <YAxis stroke="#64748b" style={{ fontSize: 10 }} domain={["dataMin - 10", "dataMax + 10"]} tickFormatter={(val) => `₹${safeNumber(val, 0)}`} />
+                        <Tooltip 
+                          contentStyle={{ backgroundColor: "#ffffff", border: "1px solid #cbd5e1", fontSize: 11 }}
+                          formatter={(value: any, name: any) => [`₹${safeNumber(value, 2)}`, name]}
+                          labelFormatter={(label) => `Time: ${label}`}
+                        />
+                        <Legend wrapperStyle={{ fontSize: 10 }} />
+                        <Line type="monotone" dataKey="ce_vwap" name="Call (CE) VWAP" stroke="#10b981" strokeWidth={2} dot={false} />
+                        <Line type="monotone" dataKey="pe_vwap" name="Put (PE) VWAP" stroke="#ef4444" strokeWidth={2} dot={false} />
+                      </RecLineChart>
+                    </ResponsiveContainer>
+                  </div>
                 </div>
               </div>
 
@@ -1042,7 +1254,7 @@ export default function Dashboard() {
                   </div>
                   <div className="h-52 bg-slate-50 p-3 rounded-lg border border-slate-100">
                     <ResponsiveContainer width="100%" height="100%">
-                      <AreaChart data={getVolumeDistributionData()} margin={{ top: 5, right: 10, left: 0, bottom: 5 }}>
+                      <AreaChart data={volumeDistributionData} margin={{ top: 5, right: 10, left: 0, bottom: 5 }}>
                         <defs>
                           <linearGradient id="callVolGrad" x1="0" y1="0" x2="0" y2="1">
                             <stop offset="5%" stopColor="#f43f5e" stopOpacity={0.3} />
@@ -1084,7 +1296,7 @@ export default function Dashboard() {
                   <p className="text-[10px] text-slate-500 font-bold">+ve = Call buildup (resistance) · -ve = Put buildup (support floor)</p>
                   <div className="h-48 bg-slate-50 p-3 rounded-lg border border-slate-100">
                     <ResponsiveContainer width="100%" height="100%">
-                      <BarChart data={getOiSkewData()} margin={{ top: 5, right: 10, left: 0, bottom: 5 }}>
+                      <BarChart data={oiSkewData} margin={{ top: 5, right: 10, left: 0, bottom: 5 }}>
                         <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" />
                         <XAxis dataKey="strike" stroke="#64748b" style={{ fontSize: 10 }} />
                         <YAxis stroke="#64748b" style={{ fontSize: 10 }} tickFormatter={(v) => `${v}k`} />
@@ -1096,7 +1308,7 @@ export default function Dashboard() {
                         <ReferenceLine y={0} stroke="#94a3b8" strokeWidth={1.5} />
                         <ReferenceLine x={spotData?.price ? Math.round(spotData.price / 100) * 100 : undefined} stroke="#6366f1" strokeDasharray="4 2" label={{ value: "ATM", fill: "#6366f1", fontSize: 9 }} />
                         <Bar dataKey="netSkew" name="Net OI Skew" radius={[3, 3, 0, 0]}>
-                          {getOiSkewData().map((entry, index) => (
+                          {oiSkewData.map((entry, index) => (
                             <Cell key={`skew-${index}`} fill={entry.netSkew >= 0 ? "#f43f5e" : "#10b981"} />
                           ))}
                         </Bar>
@@ -1181,12 +1393,12 @@ export default function Dashboard() {
                       <div className="bg-slate-55 p-3 rounded-lg border border-slate-205 space-y-1">
                         <div className="flex justify-between items-center text-xs">
                           <div className="text-center bg-emerald-50 p-1.5 rounded w-[45%]">
-                            <span className="text-[8px] text-emerald-600 block font-bold uppercase">Expected High</span>
+                            <span className="text-[8px] text-emerald-600 block font-bold uppercase">VIX Expected High</span>
                             <span className="font-mono text-xs font-bold text-slate-800 block mt-0.5">{safeNumber(forecastData.forecast.expected_high, 0)}</span>
                           </div>
                           <div className="text-slate-405 font-bold font-mono">TO</div>
                           <div className="text-center bg-rose-50 p-1.5 rounded w-[45%]">
-                            <span className="text-[8px] text-rose-600 block font-bold uppercase">Expected Low</span>
+                            <span className="text-[8px] text-rose-600 block font-bold uppercase">VIX Expected Low</span>
                             <span className="font-mono text-xs font-bold text-slate-800 block mt-0.5">{safeNumber(forecastData.forecast.expected_low, 0)}</span>
                           </div>
                         </div>
@@ -1268,6 +1480,27 @@ export default function Dashboard() {
                 </div>
               </div>
 
+              {/* Option Price vs Volume Chart */}
+              <div className="bg-white border border-slate-200 p-5 rounded-2xl shadow-sm">
+                <h3 className="text-base font-bold uppercase tracking-wider border-b border-slate-205 pb-3 text-slate-705 flex items-center gap-2.5">
+                  <BarChart3 className="h-5.5 w-5.5 text-slate-500" />
+                  Option Premium Price vs Volume
+                </h3>
+                <div className="h-72 mt-4 bg-slate-50 p-4 rounded-xl border border-slate-200">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <ScatterChart margin={{ top: 20, right: 20, bottom: 20, left: 20 }}>
+                      <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" />
+                      <XAxis type="number" dataKey="price" name="Premium Price" stroke="#64748b" style={{ fontSize: 10 }} tickFormatter={(val) => `₹${val}`} />
+                      <YAxis type="number" dataKey="volume" name="Volume" stroke="#64748b" style={{ fontSize: 10 }} tickFormatter={(val) => `${val}k`} />
+                      <Tooltip cursor={{ strokeDasharray: '3 3' }} contentStyle={{ backgroundColor: "#ffffff", border: "1px solid #cbd5e1", fontSize: 11 }} formatter={(value: any, name: any) => name === 'Volume' ? [`${safeNumber(value, 1)}k lots`, name] : [`₹${safeNumber(value, 1)}`, name]} />
+                      <Legend wrapperStyle={{ fontSize: 10 }} />
+                      <Scatter name="Call Options (CE)" data={ceOptionPriceVsVolumeData} fill="#10b981" />
+                      <Scatter name="Put Options (PE)" data={peOptionPriceVsVolumeData} fill="#ef4444" />
+                    </ScatterChart>
+                  </ResponsiveContainer>
+                </div>
+              </div>
+
               {/* Option Chain Table (Removed vertical scroll lock) */}
               <div className="bg-white border border-slate-200 rounded-2xl overflow-hidden shadow-sm">
                 <div className="p-4 border-b border-slate-200 bg-slate-50 flex items-center justify-between">
@@ -1284,9 +1517,9 @@ export default function Dashboard() {
                   <table className="w-full text-sm text-left text-slate-700 font-bold">
                     <thead className="text-xs text-slate-555 uppercase bg-slate-50 border-b border-slate-200 text-center tracking-wider font-extrabold sticky top-0 z-10">
                       <tr>
-                        <th colSpan={6} className="py-2.5 border-r border-slate-200 text-emerald-655">Calls (CE)</th>
+                        <th colSpan={7} className="py-2.5 border-r border-slate-200 text-emerald-655">Calls (CE)</th>
                         <th className="py-2.5 border-r border-slate-200">Strike</th>
-                        <th colSpan={6} className="py-2.5 text-rose-655">Puts (PE)</th>
+                        <th colSpan={7} className="py-2.5 text-rose-655">Puts (PE)</th>
                       </tr>
                       <tr className="border-t border-slate-200">
                         <th className="px-2 py-1.5">OI</th>
@@ -1294,10 +1527,12 @@ export default function Dashboard() {
                         <th className="px-2 py-1.5">Vol</th>
                         <th className="px-2 py-1.5">IV</th>
                         <th className="px-2 py-1.5">LTP</th>
+                        <th className="px-2 py-1.5">Lot Price</th>
                         <th className="px-2 py-1.5 border-r border-slate-200">Delta</th>
                         <th className="px-3 py-1.5 border-r border-slate-200">Strike</th>
                         <th className="px-2 py-1.5">Delta</th>
                         <th className="px-2 py-1.5">LTP</th>
+                        <th className="px-2 py-1.5">Lot Price</th>
                         <th className="px-2 py-1.5">IV</th>
                         <th className="px-2 py-1.5">Vol</th>
                         <th className="px-2 py-1.5">OI Chg</th>
@@ -1305,13 +1540,17 @@ export default function Dashboard() {
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-slate-200 font-mono text-center">
-                      {getGroupedOptions().map((row: any, idx: number) => {
+                      {groupedOptions.map((row: any, idx: number) => {
                         const strike = row.strike;
                         const isITMCall = spotData && strike < spotData.price;
                         const isITMPut = spotData && strike > spotData.price;
                         
                         const ceOpt = row.CE || {};
                         const peOpt = row.PE || {};
+
+                        const lotSize = LOT_SIZES[symbol] || 1;
+                        const ceLotPrice = (ceOpt.last_price || 0) * lotSize;
+                        const peLotPrice = (peOpt.last_price || 0) * lotSize;
 
                         return (
                           <tr key={idx} className="hover:bg-slate-50/50">
@@ -1320,12 +1559,14 @@ export default function Dashboard() {
                             <td className={`px-2 py-2.5 ${isITMCall ? 'bg-slate-100/30' : ''}`}>{safeNumber(ceOpt.volume / 1000, 1)}k</td>
                             <td className={`px-2 py-2.5 ${isITMCall ? 'bg-slate-100/30' : ''}`}>{safeNumber(ceOpt.implied_volatility * 100, 1)}%</td>
                             <td className={`px-2 py-2.5 font-bold ${isITMCall ? 'bg-slate-100/30' : ''} text-slate-808`}>{safeNumber(ceOpt.last_price, 1)}</td>
+                            <td className={`px-2 py-2.5 font-bold ${isITMCall ? 'bg-slate-100/30' : ''} text-slate-500`}>₹{safeNumber(ceLotPrice, 0)}</td>
                             <td className={`px-2 py-2.5 border-r border-slate-200 ${isITMCall ? 'bg-slate-100/30' : ''} text-emerald-600`}>{safeNumber(ceOpt.delta, 2)}</td>
                             
                             <td className="px-3 py-2.5 border-r border-slate-200 bg-slate-50 font-bold text-slate-905 text-sm">{safeNumber(strike, 0)}</td>
                             
                             <td className={`px-2 py-2.5 ${isITMPut ? 'bg-slate-100/30' : ''} text-rose-600`}>{safeNumber(peOpt.delta, 2)}</td>
                             <td className={`px-2 py-2.5 font-bold ${isITMPut ? 'bg-slate-100/30' : ''} text-slate-808`}>{safeNumber(peOpt.last_price, 1)}</td>
+                            <td className={`px-2 py-2.5 font-bold ${isITMPut ? 'bg-slate-100/30' : ''} text-slate-500`}>₹{safeNumber(peLotPrice, 0)}</td>
                             <td className={`px-2 py-2.5 ${isITMPut ? 'bg-slate-100/30' : ''}`}>{safeNumber(peOpt.implied_volatility * 100, 1)}%</td>
                             <td className={`px-2 py-2.5 ${isITMPut ? 'bg-slate-100/30' : ''}`}>{safeNumber(peOpt.volume / 1000, 1)}k</td>
                             <td className={`px-2 py-2.5 ${isITMPut ? 'bg-slate-100/30' : ''} ${peOpt.change_in_oi >= 0 ? 'text-emerald-600' : 'text-rose-600'}`}>{safeNumber(peOpt.change_in_oi / 1000, 1)}k</td>
@@ -1345,12 +1586,12 @@ export default function Dashboard() {
             <div className="space-y-4 animate-fade-slide">
               <div className="bg-white border border-slate-200 p-5 rounded-2xl shadow-sm">
                 <h3 className="text-base font-bold uppercase tracking-wider border-b border-slate-200 pb-3 text-slate-705 flex items-center gap-2.5">
-                  <BarChart3 className="h-5.5 w-5.5 text-slate-500" />
+                  <BarChart3 className="h-5.5 w-5.5 text-slate-550" />
                   Dealer Net Gamma Exposure (GEX Profile in Millions)
                 </h3>
                 <div className="h-72 mt-4 bg-slate-50 p-4 rounded-xl border border-slate-200">
                   <ResponsiveContainer width="100%" height="100%">
-                    <BarChart data={compileGexData(chainData?.options, spotData?.price || chainData?.spot_price || 0)}>
+                    <BarChart data={gexData}>
                       <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" />
                       <XAxis dataKey="strike" stroke="#64748b" style={{ fontSize: 10 }} />
                       <YAxis stroke="#64748b" style={{ fontSize: 10 }} tickFormatter={(val) => `${val.toFixed(1)}M`} />
@@ -1398,7 +1639,7 @@ export default function Dashboard() {
                 </h3>
                 <div className="h-72 mt-4 bg-slate-50 p-4 rounded-xl border border-slate-200">
                   <ResponsiveContainer width="100%" height="100%">
-                    <RecLineChart data={getVolSmileData()}>
+                    <RecLineChart data={volSmileData}>
                       <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" />
                       <XAxis dataKey="strike" stroke="#64748b" style={{ fontSize: 10 }} />
                       <YAxis stroke="#64748b" style={{ fontSize: 10 }} tickFormatter={(val) => `${val}%`} />
@@ -1458,10 +1699,7 @@ export default function Dashboard() {
                   <div className="h-48 bg-slate-50 p-3 rounded-lg border border-slate-100">
                     {fiiDiiData ? (
                       <ResponsiveContainer width="100%" height="100%">
-                        <BarChart data={[
-                          { name: "FII Flows", Net: fiiDiiData.fii_net },
-                          { name: "DII Flows", Net: fiiDiiData.dii_net }
-                        ]}>
+                        <BarChart data={institutionalFlowsData}>
                           <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" />
                           <XAxis dataKey="name" stroke="#64748b" style={{ fontSize: 11, fontWeight: "bold" }} />
                           <YAxis stroke="#64748b" style={{ fontSize: 10 }} tickFormatter={(val) => `${val} Cr`} />

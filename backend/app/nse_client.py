@@ -31,7 +31,7 @@ class NSEClient:
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36',
             'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8',
             'Accept-Language': 'en-IN,en-GB;q=0.9,en-US;q=0.8,en;q=0.7',
-            'Accept-Encoding': 'gzip, deflate, br',
+            'Accept-Encoding': 'gzip, deflate',
             'Host': 'www.nseindia.com',
             'Referer': 'https://www.nseindia.com/',
             'Connection': 'keep-alive',
@@ -241,6 +241,10 @@ class NSEClient:
                     live_json = self.fetch_live_data(sym)
                     if live_json:
                         parsed = self.parse_nse_json(sym, live_json)
+                        # Inject real spot price from Yahoo Finance
+                        real_spot = self.fetch_yahoo_spot(sym)
+                        if real_spot:
+                            parsed["spot_price"] = real_spot
                         # Inject live USDINR & VIX
                         real_vix = self.fetch_yahoo_spot("VIX")
                         if real_vix:
@@ -435,20 +439,25 @@ class NSEClient:
         """
         global _sim_spot_prices, _sim_vix, _fii_net, _dii_net
         
-        # 1. Update spot prices with minor drift
-        drift_max = 15.0
-        if symbol == "NIFTY":
+        # 1. Update spot prices with minor drift or live data
+        real_spot = self.fetch_yahoo_spot(symbol)
+        if real_spot:
+            spot_price = real_spot
+            _sim_spot_prices[symbol] = real_spot
+        else:
             drift_max = 15.0
-        elif symbol == "BANKNIFTY":
-            drift_max = 40.0
-        elif symbol == "SENSEX":
-            drift_max = 60.0
-        elif symbol == "BANKEX":
-            drift_max = 45.0
-            
-        spot_drift = random.uniform(-drift_max, drift_max)
-        _sim_spot_prices[symbol] = round(_sim_spot_prices[symbol] + spot_drift, 2)
-        spot_price = _sim_spot_prices[symbol]
+            if symbol == "NIFTY":
+                drift_max = 15.0
+            elif symbol == "BANKNIFTY":
+                drift_max = 40.0
+            elif symbol == "SENSEX":
+                drift_max = 60.0
+            elif symbol == "BANKEX":
+                drift_max = 45.0
+                
+            spot_drift = random.uniform(-drift_max, drift_max)
+            _sim_spot_prices[symbol] = round(_sim_spot_prices[symbol] + spot_drift, 2)
+            spot_price = _sim_spot_prices[symbol]
         
         # Drift other indices to keep them in sync
         for s_index in _sim_spot_prices:

@@ -125,18 +125,18 @@ def load_ensemble_models(symbol: str) -> Dict[str, Any]:
         
     models = {}
     
-    lgb_path = os.path.join(MODEL_DIR, f"lgb_{symbol}.pkl")
-    if os.path.exists(lgb_path):
-        models["lgb"] = joblib.load(lgb_path)
-        
-    xgb_path = os.path.join(MODEL_DIR, f"xgb_{symbol}.pkl")
-    if os.path.exists(xgb_path):
-        models["xgb"] = joblib.load(xgb_path)
-        
-    rf_path = os.path.join(MODEL_DIR, f"rf_{symbol}.pkl")
-    if os.path.exists(rf_path):
-        models["rf"] = joblib.load(rf_path)
-        
+    for model_name, prefix in [("lgb", "lgb"), ("xgb", "xgb"), ("rf", "rf")]:
+        path = os.path.join(MODEL_DIR, f"{prefix}_{symbol}.pkl")
+        if os.path.exists(path):
+            try:
+                models[model_name] = joblib.load(path)
+            except Exception as e:
+                logger.warning(f"Failed to load model file {path} (possibly corrupted): {e}. Removing file to trigger retraining.")
+                try:
+                    os.remove(path)
+                except Exception as del_err:
+                    logger.error(f"Failed to delete corrupted model file {path}: {del_err}")
+                    
     if models:
         _MODEL_CACHE[symbol] = models
         
@@ -227,8 +227,8 @@ def predict_market_direction(features: dict, symbol: str) -> Dict[str, Any]:
     import math
     daily_move = spot_price * (vix / 100.0) * math.sqrt(1.0 / 365.0)
     
-    expected_high = round(spot_price + daily_move * 1.2, 2)
-    expected_low = round(spot_price - daily_move * 1.2, 2)
+    expected_high = round(spot_price + daily_move, 2)
+    expected_low = round(spot_price - daily_move, 2)
     
     # Breakout probabilities
     breakout_chance = round(prob_up * 100.0 * 1.15, 2)
@@ -300,7 +300,10 @@ def predict_market_direction(features: dict, symbol: str) -> Dict[str, Any]:
 
     # Strong Banking Participation reason
     if symbol in {"BANKNIFTY", "BANKEX"}:
-        reasons[3] = "Strong Financial Sector banking participation"
+        if len(reasons) > 3:
+            reasons[3] = "Strong Financial Sector banking participation"
+        else:
+            reasons.append("Strong Financial Sector banking participation")
 
     return {
         "prob_neutral": round(prob_neutral, 4),

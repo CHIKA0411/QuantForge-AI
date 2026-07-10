@@ -1,0 +1,30 @@
+# Python virtual environment and bytecode cache
+.venv/
+venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Databases and SQLite files
+*.db
+*.sqlite
+*.sqlite3
+
+# Logs
+*.log
+*-server.log
+*-server.err.log
+
+# Frontend Next.js build output and dependencies
+node_modules/
+.next/
+out/
+.env.local
+.env.*.local
+
+# IDEs and system files
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
