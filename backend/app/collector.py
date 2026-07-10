@@ -16,14 +16,35 @@ scheduler = BackgroundScheduler()
 def scrape_and_store_job():
     """Periodic job to collect option chains, VIX, futures, USDINR, FII/DII data, and calculate Greeks."""
     logger.info("Executing periodic market data collection job...")
+    
+    # 1. Fetch all data from network first (DO NOT open database session yet)
+    symbols = ["NIFTY", "BANKNIFTY", "SENSEX", "BANKEX"]
+    fetched_data = {}
+    
+    try:
+        # Collect NIFTY first to get VIX and FII/DII flows
+        nifty_data = nse_client.get_market_data("NIFTY")
+        fetched_data["NIFTY"] = nifty_data
+    except Exception as e:
+        logger.error(f"Error fetching NIFTY data: {e}")
+        return
+        
+    for symbol in symbols:
+        if symbol == "NIFTY":
+            continue
+        try:
+            fetched_data[symbol] = nse_client.get_market_data(symbol)
+        except Exception as e:
+            logger.error(f"Error fetching {symbol} data: {e}")
+
+    # 2. Now open database session and save data quickly (short-lived transaction)
     from app.db import SessionLocal
     db: Session = SessionLocal()
     try:
-        # Loop through all 4 target indices
-        symbols = ["NIFTY", "BANKNIFTY", "SENSEX", "BANKEX"]
-        
-        # Collect NIFTY first to get VIX and FII/DII flows
-        nifty_data = nse_client.get_market_data("NIFTY")
+        nifty_data = fetched_data.get("NIFTY")
+        if not nifty_data:
+            return
+            
         vix_val = nifty_data.get("vix", 13.5)
         timestamp = nifty_data.get("timestamp", datetime.datetime.now())
         
@@ -46,10 +67,12 @@ def scrape_and_store_job():
         
         usdinr_fut_record = FuturePrice(timestamp=timestamp, symbol="USDINR", price=usdinr_fut)
         db.merge(usdinr_fut_record)
-
+        
         for symbol in symbols:
-            data = nifty_data if symbol == "NIFTY" else nse_client.get_market_data(symbol)
-            
+            data = fetched_data.get(symbol)
+            if not data:
+                continue
+                
             spot = float(data["spot_price"])
             ts = data["timestamp"]
             expiry_date = data["expiry_date"]
@@ -114,7 +137,7 @@ def scrape_and_store_job():
         logger.info("Market data collection transaction committed successfully.")
     except Exception as e:
         db.rollback()
-        logger.error(f"Error in data collection job: {e}")
+        logger.error(f"Error in data collection job database operations: {e}")
     finally:
         db.close()
 
